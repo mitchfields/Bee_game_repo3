@@ -1,15 +1,18 @@
-[gd_scene load_steps=8 format=3 uid="uid://byycx3eemm1ft"]
+[gd_scene load_steps=9 format=3 uid="uid://byycx3eemm1ft"]
 
 [ext_resource type="Script" uid="uid://c1l3ac0xr37aw" path="res://scripts/world.gd" id="1_c6gwx"]
 [ext_resource type="Script" uid="uid://m2vlqta6ehny" path="res://scripts/DragLayer.gd" id="2_hlk0d"]
 [ext_resource type="PackedScene" uid="uid://qylv8huf4d2i" path="res://scenes/CommonEnemy.tscn" id="3_0uv0p"]
 [ext_resource type="PackedScene" uid="uid://cfecedf7skswl" path="res://scenes/HexagonTile.tscn" id="4_p1v5b"]
+[ext_resource type="PackedScene" uid="uid://c0li1mfxqf3xg" path="res://scenes/Queen.tscn" id="5_pof0q"]
 [ext_resource type="Script" uid="uid://x3xi8fnbanl4" path="res://scripts/ShopBar.gd" id="7_0uv0p"]
 [ext_resource type="Script" uid="uid://dpvon03y1t6qx" path="res://scripts/WaveManager.gd" id="8_ygioq"]
 [ext_resource type="Script" uid="uid://el2sha2pbr2x" path="res://scripts/GameUI.gd" id="9_pdh0q"]
 
 [node name="World" type="Node2D"]
 script = ExtResource("1_c6gwx")
+queen_scene = ExtResource("5_pof0q")
+hex_tile_scene = ExtResource("4_p1v5b")
 
 [node name="Camera2D" type="Camera2D" parent="."]
 position = Vector2(576, 324)

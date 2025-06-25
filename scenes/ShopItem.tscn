@@ -1,0 +1,15 @@
+[gd_scene load_steps=3 format=3 uid="uid://6rjpxfmhb0d1"]
+
+[ext_resource type="Script" uid="uid://0lpfd7pr1c3o" path="res://scripts/ShopItem.gd" id="1_x134o"]
+[ext_resource type="Texture2D" uid="uid://dymcv0fdk57m2" path="res://textures/hex_1.png" id="2_c6r3m"]
+
+[node name="ShopItem" type="Node2D"]
+script = ExtResource("1_x134o")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("2_c6r3m")
+
+[node name="Area2D" type="Area2D" parent="Sprite2D"]
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Sprite2D/Area2D"]
+polygon = PackedVector2Array(-676, 1130, 659, 1130, 1310, -2, 659, -1141, -660, -1141, -1311, -2)

@@ -1,0 +1,24 @@
+[gd_scene load_steps=4 format=3 uid="uid://c0li1mfxqf3xg"]
+
+[ext_resource type="Script" uid="uid://cye8rn1ds5uti" path="res://scripts/Queen.gd" id="1_gof1y"]
+[ext_resource type="Texture2D" uid="uid://dm8gavru63fn1" path="res://textures/queen_temp_v01.png" id="2_dpvll"]
+[ext_resource type="Texture2D" uid="uid://dymcv0fdk57m2" path="res://textures/hex_1.png" id="2_uof4u"]
+
+[node name="Queen" type="Node2D"]
+script = ExtResource("1_gof1y")
+
+[node name="Sprite2D2" type="Sprite2D" parent="."]
+position = Vector2(3.8147e-06, -1)
+scale = Vector2(0.0259579, 0.0259579)
+texture = ExtResource("2_uof4u")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(2, -3.8147e-06)
+scale = Vector2(0.152, 0.152)
+texture = ExtResource("2_dpvll")
+
+[node name="HealthBar" type="TextureProgressBar" parent="."]
+offset_left = -12.896
+offset_top = 18.392
+offset_right = 130.104
+offset_bottom = 35.392

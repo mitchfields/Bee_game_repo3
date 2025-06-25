@@ -1,0 +1,128 @@
+[gd_scene load_steps=8 format=3 uid="uid://byycx3eemm1ft"]
+
+[ext_resource type="Script" uid="uid://c1l3ac0xr37aw" path="res://scripts/world.gd" id="1_c6gwx"]
+[ext_resource type="Script" uid="uid://m2vlqta6ehny" path="res://scripts/DragLayer.gd" id="2_hlk0d"]
+[ext_resource type="PackedScene" uid="uid://qylv8huf4d2i" path="res://scenes/CommonEnemy.tscn" id="3_0uv0p"]
+[ext_resource type="PackedScene" uid="uid://cfecedf7skswl" path="res://scenes/HexagonTile.tscn" id="4_p1v5b"]
+[ext_resource type="Script" uid="uid://x3xi8fnbanl4" path="res://scripts/ShopBar.gd" id="7_0uv0p"]
+[ext_resource type="Script" uid="uid://dpvon03y1t6qx" path="res://scripts/WaveManager.gd" id="8_ygioq"]
+[ext_resource type="Script" uid="uid://el2sha2pbr2x" path="res://scripts/GameUI.gd" id="9_pdh0q"]
+
+[node name="World" type="Node2D"]
+script = ExtResource("1_c6gwx")
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2(576, 324)
+
+[node name="GameLayer" type="Node2D" parent="."]
+
+[node name="WaveManager" type="Node2D" parent="GameLayer"]
+script = ExtResource("8_ygioq")
+enemy_scenes = Array[PackedScene]([ExtResource("3_0uv0p")])
+
+[node name="UI" type="CanvasLayer" parent="GameLayer"]
+
+[node name="DragLayer" type="Control" parent="GameLayer/UI"]
+visible = false
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = 1.0
+offset_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("2_hlk0d")
+
+[node name="ColorRect" type="ColorRect" parent="GameLayer/UI/DragLayer"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.17
+anchor_top = 0.884
+anchor_right = 0.853
+anchor_bottom = 0.969
+offset_left = -20.01
+offset_top = 0.283997
+offset_right = -0.509094
+offset_bottom = 0.118958
+mouse_filter = 2
+color = Color(0.027451, 0.368627, 0.745098, 0.364706)
+
+[node name="ShopLayer" type="CenterContainer" parent="GameLayer/UI/DragLayer"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ShopBar" type="Node2D" parent="GameLayer/UI"]
+position = Vector2(576, 573)
+script = ExtResource("7_0uv0p")
+item_scenes = Array[PackedScene]([ExtResource("4_p1v5b")])
+bar_width = 601.065
+drop_back_ratio = 0.16
+
+[node name="RerollButton" type="Button" parent="GameLayer/UI/ShopBar"]
+offset_left = -465.0
+offset_top = -16.0
+offset_right = -340.0
+offset_bottom = 21.0
+metadata/_edit_use_anchors_ = true
+
+[node name="FreezeButton" type="Button" parent="GameLayer/UI/ShopBar"]
+offset_left = 396.0
+offset_top = -16.0
+offset_right = 500.0
+offset_bottom = 18.0
+metadata/_edit_use_anchors_ = true
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="TopBar" type="Control" parent="CanvasLayer"]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("9_pdh0q")
+metadata/_edit_use_anchors_ = true
+
+[node name="MoneyLabel" type="Label" parent="CanvasLayer/TopBar"]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 23.0
+metadata/_edit_use_anchors_ = true
+
+[node name="WaveLabel" type="Label" parent="CanvasLayer/TopBar"]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 23.0
+metadata/_edit_use_anchors_ = true
+
+[node name="WaveProgress" type="ProgressBar" parent="CanvasLayer/TopBar"]
+layout_mode = 0
+offset_left = 445.0
+offset_top = 17.0
+offset_right = 652.0
+offset_bottom = 44.0
+metadata/_edit_use_anchors_ = true
+
+[node name="StartWaveButton" type="Button" parent="CanvasLayer/TopBar"]
+layout_mode = 0
+offset_left = 294.0
+offset_top = 14.0
+offset_right = 386.0
+offset_bottom = 45.0
+text = "Start Wave"
+metadata/_edit_use_anchors_ = true
+
+[node name="FastForwardButton" type="Button" parent="CanvasLayer/TopBar"]
+layout_mode = 0
+offset_left = 720.0
+offset_top = 12.0
+offset_right = 760.0
+offset_bottom = 43.0
+text = ">"
+metadata/_edit_use_anchors_ = true

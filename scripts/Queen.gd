@@ -6,7 +6,7 @@ var hp: int
 
 func _ready() -> void:
 	hp = max_health
-	# Assumes you have a TextureProgress named “HealthBar” as a direct child
+	# assumes you have a TextureProgress child named "HealthBar"
 	$HealthBar.max_value = max_health
 	$HealthBar.value     = hp
 

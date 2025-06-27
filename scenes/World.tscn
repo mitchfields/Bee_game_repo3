@@ -13,6 +13,7 @@
 script = ExtResource("1_c6gwx")
 queen_scene = ExtResource("5_pof0q")
 hex_tile_scene = ExtResource("4_p1v5b")
+hex_size = null
 
 [node name="Camera2D" type="Camera2D" parent="."]
 position = Vector2(576, 324)

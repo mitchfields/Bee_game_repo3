@@ -1,35 +1,45 @@
 # res://scripts/Enemy.gd
 extends CharacterBody2D
 
-@export var speed     : float = 120.0
-@export var gold_drop : int   = 1
-@export var damage    : int   = 1
+signal died
+signal hit_queen
 
-var _path       : Array     = []
-var _path_index : int       = 0
+@export var speed: float = 120.0
 
-@onready var world = get_tree().current_scene   # assumes World.gd is the root
+# holds a list of axial coords (Vector2) to follow
+var path: Array = []
+var _idx: int   = 0
+var _world      = null
 
 func _ready() -> void:
-	# 1) Convert spawn pos → axial
-	var start_axial = world.world_to_axial(global_position)
-	# 2) Queen is always at axial (0,0)
-	var goal_axial = Vector2.ZERO
-	# 3) Ask GridManager for path
-	_path = GridManager.find_path(start_axial, goal_axial)
-	_path_index = 0
+	_world = get_tree().current_scene
+	# re-plan whenever walls change
+	GridManager.connect("grid_changed", Callable(self, "_on_grid_changed"))
+
+func set_path(p) -> void:
+	# accept any Array of Vector2, no type mismatch
+	path = p.duplicate()
+	_idx = 0
+
+func _on_grid_changed() -> void:
+	# recompute from current pos to queen at (0,0)
+	var my_axial = _world.world_to_axial(global_position)
+	var new_path = GridManager.find_path(my_axial, Vector2.ZERO)
+	if new_path.size() > 0:
+		set_path(new_path)
 
 func _physics_process(delta: float) -> void:
-	if _path_index < _path.size():
-		# move toward the next cell center
-		var target_pos = world.axial_to_world(_path[_path_index])
-		var direction  = (target_pos - global_position).normalized()
-		velocity = direction * speed
+	if _idx < path.size():
+		var target = _world.axial_to_world(path[_idx])
+		var dir    = (target - global_position).normalized()
+		velocity   = dir * speed
 		move_and_slide()
-		# if close enough, step to next
-		if global_position.distance_to(target_pos) < speed * delta:
-			_path_index += 1
+		if global_position.distance_to(target) < speed * delta:
+			_idx += 1
 	else:
-		# reached the Queen
-		emit_signal("hit_queen")   # connect this to WaveManager
+		emit_signal("hit_queen")
 		queue_free()
+
+func die() -> void:
+	emit_signal("died")
+	queue_free()

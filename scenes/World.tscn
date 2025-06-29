@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://byycx3eemm1ft"]
+[gd_scene load_steps=10 format=3 uid="uid://byycx3eemm1ft"]
 
 [ext_resource type="Script" uid="uid://c1l3ac0xr37aw" path="res://scripts/World.gd" id="1_c6gwx"]
 [ext_resource type="Script" uid="uid://m2vlqta6ehny" path="res://scripts/DragLayer.gd" id="2_hlk0d"]
@@ -6,6 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://cfecedf7skswl" path="res://scenes/HexagonTile.tscn" id="4_p1v5b"]
 [ext_resource type="PackedScene" uid="uid://c0li1mfxqf3xg" path="res://scenes/Queen.tscn" id="5_pof0q"]
 [ext_resource type="Script" uid="uid://x3xi8fnbanl4" path="res://scripts/ShopBar.gd" id="7_0uv0p"]
+[ext_resource type="PackedScene" uid="uid://ncdu2faijkrd" path="res://scenes/SniperTurret.tscn" id="8_pdh0q"]
 [ext_resource type="Script" uid="uid://dpvon03y1t6qx" path="res://scripts/WaveManager.gd" id="8_ygioq"]
 [ext_resource type="Script" uid="uid://el2sha2pbr2x" path="res://scripts/GameUI.gd" id="9_pdh0q"]
 
@@ -63,7 +64,7 @@ color = Color(0.027451, 0.368627, 0.745098, 0.364706)
 [node name="ShopBar" type="Node2D" parent="GameLayer/UI"]
 position = Vector2(576, 573)
 script = ExtResource("7_0uv0p")
-item_scenes = Array[PackedScene]([ExtResource("4_p1v5b")])
+item_scenes = Array[PackedScene]([ExtResource("4_p1v5b"), ExtResource("8_pdh0q")])
 bar_width = 601.065
 drop_back_ratio = 0.16
 

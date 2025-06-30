@@ -8,12 +8,12 @@ class_name World
 @export var initial_spawn_distance : int      = 8
 @export var player_health          : int      = 20
 
-# Drag state
+# Drag‐and‐drop state
 var _dragging_preview : Node2D      = null
 var _dragging_scene   : PackedScene = null
 var _panning          : bool        = false
 
-# Deferred validation
+# Deferred placement validation
 var _last_placed_tile : HexagonTile = null
 var _last_spawn_axial : Vector2     = Vector2.ZERO
 var initial_spawn_world: Vector2
@@ -23,14 +23,14 @@ var initial_spawn_world: Vector2
 
 func _ready() -> void:
 	randomize()
-	# 1) Spawn Queen & center
+	# 1) Spawn the Queen & center the camera
 	var q = _spawn_queen()
 	if q:
 		camera.make_current()
 		camera.global_position = q.position
-	# 2) Initial spawn‐origin
+	# 2) Compute the “placeholder” spawn‐origin world position
 	initial_spawn_world = axial_to_world(Vector2(initial_spawn_distance, 0))
-	# 3) Hook enemy hit‐queen
+	# 3) Hook into enemy spawn events so we can catch hit_queen
 	wave_manager.connect("enemy_spawned", Callable(self, "_on_enemy_spawned"))
 
 func _on_enemy_spawned(enemy: Node2D) -> void:
@@ -40,13 +40,12 @@ func _on_enemy_spawned(enemy: Node2D) -> void:
 func _on_enemy_hit_queen(_enemy: Node2D) -> void:
 	player_health -= 1
 	print("Player health:", player_health)
-	# TODO: update your health UI
+	# When health runs out, switch to your Game Over scene
 	if player_health <= 0:
-		print("Game Over!")
-		get_tree().paused = true
+		get_tree().change_scene_to_file("res://scenes/GameOver.tscn")
 
 func _input(event: InputEvent) -> void:
-	# zoom & pan
+	# Zoom & pan
 	if event is InputEventMouseButton and event.pressed:
 		match event.button_index:
 			MOUSE_BUTTON_WHEEL_UP:   camera.zoom *= Vector2(1.1,1.1); return
@@ -56,20 +55,21 @@ func _input(event: InputEvent) -> void:
 			and event.button_index == MOUSE_BUTTON_MIDDLE:
 		_panning = false; return
 
-	# drag‐preview
+	# Drag‐preview
 	if _dragging_preview:
 		if event is InputEventMouseMotion:
 			_dragging_preview.global_position = get_global_mouse_position()
 		elif event is InputEventMouseButton \
 				and event.button_index == MOUSE_BUTTON_LEFT \
 				and not event.pressed:
-			var dy       = get_global_mouse_position().y
-			var sh       = get_viewport().get_visible_rect().size.y
+			var dy = get_global_mouse_position().y
+			var sh = get_viewport().get_visible_rect().size.y
 			if dy < sh * 0.9:
 				_spawn_hex(_dragging_scene)
 			_end_drag()
 		return
 
+	# Middle‐mouse panning
 	if _panning and event is InputEventMouseMotion:
 		camera.global_position -= event.relative / camera.zoom
 		return
@@ -102,11 +102,12 @@ func _spawn_queen() -> Node2D:
 func _spawn_hex(scene: PackedScene) -> bool:
 	var axial = world_to_axial(get_global_mouse_position())
 
+	# 1) Determine valid spawn origins
 	var origins = wave_manager.cluster_origins.duplicate()
 	if origins.is_empty():
 		origins.append(initial_spawn_world)
 
-	# pick furthest
+	# 2) Pick the furthest origin via current flow‐field
 	var furthest = origins[0]
 	var best_d   = GridManager.distance_map.get(world_to_axial(furthest), -1)
 	for world_o in origins:
@@ -116,15 +117,17 @@ func _spawn_hex(scene: PackedScene) -> bool:
 			furthest = world_o
 	_last_spawn_axial = world_to_axial(furthest)
 
-	# place
+	# 3) Instantiate & position the new tile
 	var h = scene.instantiate() as HexagonTile
 	h.axial_coords = axial
 	h.position     = axial_to_world(axial)
 	add_child(h)
+
+	# 4) Register with the grid and store for validation
 	GridManager.register_tile(h)
 	_last_placed_tile = h
 
-	# wire neighbors
+	# 5) Wire up neighbors (only valid instances)
 	for dir in GridManager.DIRECTIONS:
 		var nax = axial + dir
 		if GridManager.tiles.has(nax):
@@ -135,6 +138,7 @@ func _spawn_hex(scene: PackedScene) -> bool:
 	if h.has_method("play_placement_ripple"):
 		h.play_placement_ripple()
 
+	# 6) Deferred “did we block the Queen?” check
 	call_deferred("_validate_last_placement")
 	return true
 
@@ -143,19 +147,18 @@ func _validate_last_placement() -> void:
 		_last_placed_tile = null
 		return
 
+	# If our placement cut off all paths, undo it and clean up neighbors
 	if not GridManager.distance_map.has(_last_spawn_axial):
-		# clean up neighbor links both ways
 		for nbr in _last_placed_tile.neighbors.duplicate():
 			if is_instance_valid(nbr) and nbr.neighbors.has(_last_placed_tile):
 				nbr.neighbors.erase(_last_placed_tile)
 		_last_placed_tile.neighbors.clear()
-
 		GridManager.deregister_tile(_last_placed_tile)
 		_last_placed_tile.queue_free()
 
 	_last_placed_tile = null
 
-# — hex‐grid helpers unchanged —
+# — Hex‐grid coordinate helpers —  
 func axial_to_cube(a: Vector2) -> Vector3:
 	return Vector3(a.x, -a.x - a.y, a.y)
 

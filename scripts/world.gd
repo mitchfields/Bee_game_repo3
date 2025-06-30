@@ -1,73 +1,80 @@
 # res://scripts/World.gd
 extends Node2D
+class_name World
 
 @export var queen_scene            : PackedScene
 @export var hex_tile_scene         : PackedScene
-@export var hex_size               : float = 50.0
-@export var initial_spawn_distance : int   = 8    # axial cells out for placeholder
+@export var hex_size               : float    = 50.0
+@export var initial_spawn_distance : int      = 8
+@export var player_health          : int      = 20
 
-# Dragging state
+# Drag state
 var _dragging_preview : Node2D      = null
 var _dragging_scene   : PackedScene = null
 var _panning          : bool        = false
 
-# Deferred‐placement validation state
+# Deferred validation
 var _last_placed_tile : HexagonTile = null
 var _last_spawn_axial : Vector2     = Vector2.ZERO
-
-# Precomputed world‐pos of initial spawn origin
 var initial_spawn_world: Vector2
 
-@onready var camera       : Camera2D = $Camera2D
+@onready var camera       : Camera2D    = $Camera2D
 @onready var wave_manager = $GameLayer/WaveManager
 
 func _ready() -> void:
-	# 1) Spawn Queen at (0,0)
+	randomize()
+	# 1) Spawn Queen & center
 	var q = _spawn_queen()
 	if q:
 		camera.make_current()
 		camera.global_position = q.position
+	# 2) Initial spawn‐origin
+	initial_spawn_world = axial_to_world(Vector2(initial_spawn_distance, 0))
+	# 3) Hook enemy hit‐queen
+	wave_manager.connect("enemy_spawned", Callable(self, "_on_enemy_spawned"))
 
-	# 2) Compute hidden initial_spawn_world
-	var init_axial = Vector2(initial_spawn_distance, 0)
-	initial_spawn_world = axial_to_world(init_axial)
+func _on_enemy_spawned(enemy: Node2D) -> void:
+	if enemy.has_signal("hit_queen"):
+		enemy.connect("hit_queen", Callable(self, "_on_enemy_hit_queen"))
+
+func _on_enemy_hit_queen(_enemy: Node2D) -> void:
+	player_health -= 1
+	print("Player health:", player_health)
+	# TODO: update your health UI
+	if player_health <= 0:
+		print("Game Over!")
+		get_tree().paused = true
 
 func _input(event: InputEvent) -> void:
-	# Zoom & pan
+	# zoom & pan
 	if event is InputEventMouseButton and event.pressed:
 		match event.button_index:
-			MOUSE_BUTTON_WHEEL_UP:
-				camera.zoom *= Vector2(1.1,1.1); return
-			MOUSE_BUTTON_WHEEL_DOWN:
-				camera.zoom *= Vector2(0.9,0.9); return
-			MOUSE_BUTTON_MIDDLE:
-				_panning = true; return
-	elif event is InputEventMouseButton \
-			and not event.pressed \
+			MOUSE_BUTTON_WHEEL_UP:   camera.zoom *= Vector2(1.1,1.1); return
+			MOUSE_BUTTON_WHEEL_DOWN: camera.zoom *= Vector2(0.9,0.9); return
+			MOUSE_BUTTON_MIDDLE:     _panning = true; return
+	elif event is InputEventMouseButton and not event.pressed \
 			and event.button_index == MOUSE_BUTTON_MIDDLE:
 		_panning = false; return
 
-	# Drag‐preview follow + drop
+	# drag‐preview
 	if _dragging_preview:
 		if event is InputEventMouseMotion:
 			_dragging_preview.global_position = get_global_mouse_position()
 		elif event is InputEventMouseButton \
 				and event.button_index == MOUSE_BUTTON_LEFT \
 				and not event.pressed:
-			var drop_y   = get_global_mouse_position().y
-			var screen_h = get_viewport().get_visible_rect().size.y
-			if drop_y < screen_h * 0.9:
+			var dy       = get_global_mouse_position().y
+			var sh       = get_viewport().get_visible_rect().size.y
+			if dy < sh * 0.9:
 				_spawn_hex(_dragging_scene)
 			_end_drag()
 		return
 
-	# Middle‐mouse pan
 	if _panning and event is InputEventMouseMotion:
 		camera.global_position -= event.relative / camera.zoom
 		return
 
 func start_drag(scene_to_spawn: PackedScene) -> void:
-	# Spawn a semi-transparent preview
 	if _dragging_preview:
 		_dragging_preview.queue_free()
 	_dragging_scene   = scene_to_spawn
@@ -92,16 +99,14 @@ func _spawn_queen() -> Node2D:
 	add_child(q)
 	return q
 
-# — Place hex, play ripple immediately, then defer connectivity check —
 func _spawn_hex(scene: PackedScene) -> bool:
 	var axial = world_to_axial(get_global_mouse_position())
 
-	# 1) Build origin list (real spawns or placeholder)
 	var origins = wave_manager.cluster_origins.duplicate()
 	if origins.is_empty():
 		origins.append(initial_spawn_world)
 
-	# 2) Pick furthest via current flow-field
+	# pick furthest
 	var furthest = origins[0]
 	var best_d   = GridManager.distance_map.get(world_to_axial(furthest), -1)
 	for world_o in origins:
@@ -111,44 +116,46 @@ func _spawn_hex(scene: PackedScene) -> bool:
 			furthest = world_o
 	_last_spawn_axial = world_to_axial(furthest)
 
-	# 3) Commit the tile immediately
+	# place
 	var h = scene.instantiate() as HexagonTile
 	h.axial_coords = axial
 	h.position     = axial_to_world(axial)
 	add_child(h)
-
-	# 4) Register in GridManager (updates distance_map)
 	GridManager.register_tile(h)
 	_last_placed_tile = h
 
-	# 5) Wire up neighbors & ripple animation
+	# wire neighbors
 	for dir in GridManager.DIRECTIONS:
 		var nax = axial + dir
 		if GridManager.tiles.has(nax):
 			var neigh = GridManager.tiles[nax]
-			h.neighbors.append(neigh)
-			neigh.neighbors.append(h)
+			if is_instance_valid(neigh):
+				h.neighbors.append(neigh)
+				neigh.neighbors.append(h)
 	if h.has_method("play_placement_ripple"):
 		h.play_placement_ripple()
 
-	# 6) Defer the actual “did we block the Queen?” check
 	call_deferred("_validate_last_placement")
 	return true
 
 func _validate_last_placement() -> void:
-	# If the tile was removed elsewhere, skip
 	if not is_instance_valid(_last_placed_tile):
 		_last_placed_tile = null
 		return
 
-	# If our chosen spawn-origin is now unreachable, undo
 	if not GridManager.distance_map.has(_last_spawn_axial):
+		# clean up neighbor links both ways
+		for nbr in _last_placed_tile.neighbors.duplicate():
+			if is_instance_valid(nbr) and nbr.neighbors.has(_last_placed_tile):
+				nbr.neighbors.erase(_last_placed_tile)
+		_last_placed_tile.neighbors.clear()
+
 		GridManager.deregister_tile(_last_placed_tile)
 		_last_placed_tile.queue_free()
 
 	_last_placed_tile = null
 
-# — Hex-grid coordinate helpers —
+# — hex‐grid helpers unchanged —
 func axial_to_cube(a: Vector2) -> Vector3:
 	return Vector3(a.x, -a.x - a.y, a.y)
 

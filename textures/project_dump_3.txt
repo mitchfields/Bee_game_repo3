@@ -1,0 +1,1598 @@
+================================================================================
+Godot Project Dump
+Project Path: E:/Bee_game_final/bee_game_final/Bee_game_repo3
+Generated on: 2025-06-29 14:20:03
+================================================================================
+
+--- FILE: ProjectileManager.gd ---
+----------------------------------
+
+extends Node
+
+
+
+--- FILE: scenes/CommonEnemy.tscn ---
+-------------------------------------
+
+[gd_scene load_steps=5 format=3 uid="uid://qylv8huf4d2i"]
+
+[ext_resource type="Script" uid="uid://dtw46kasw5n7w" path="res://scripts/Enemy.gd" id="1_7me0g"]
+[ext_resource type="Texture2D" uid="uid://c5qoctaqmhrbh" path="res://icon.svg" id="2_2q1ts"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_7me0g"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_2q1ts"]
+
+[node name="CommonEnemy" type="CharacterBody2D" groups=["Enemies"]]
+scale = Vector2(0.255, 0.255)
+script = ExtResource("1_7me0g")
+
+[node name="Area2D" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+position = Vector2(0, 2)
+shape = SubResource("CircleShape2D_7me0g")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("2_2q1ts")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, 1)
+shape = SubResource("CircleShape2D_2q1ts")
+
+
+
+--- FILE: scenes/HexagonTile.tscn ---
+-------------------------------------
+
+[gd_scene load_steps=3 format=3 uid="uid://cfecedf7skswl"]
+
+[ext_resource type="Script" uid="uid://dxagxtulkyjwf" path="res://scripts/core/HexagonTile.gd" id="1_dwrdm"]
+[ext_resource type="Texture2D" uid="uid://dymcv0fdk57m2" path="res://textures/hex_1.png" id="2_m27il"]
+
+[node name="Node2D" type="Node2D"]
+script = ExtResource("1_dwrdm")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+scale = Vector2(0.035, 0.035)
+texture = ExtResource("2_m27il")
+region_rect = Rect2(56, 34, 253, 297)
+
+
+
+--- FILE: scenes/Projectile.tscn ---
+------------------------------------
+
+[gd_scene load_steps=2 format=3 uid="uid://btgsg5cffo7bd"]
+
+[ext_resource type="Script" uid="uid://b824tmgv6miib" path="res://scripts/Projectile.gd" id="1_dprbf"]
+
+[node name="Projectile" type="Node2D"]
+script = ExtResource("1_dprbf")
+
+[node name="Sprite" type="Sprite2D" parent="."]
+
+
+
+--- FILE: scenes/Queen.tscn ---
+-------------------------------
+
+[gd_scene load_steps=4 format=3 uid="uid://c0li1mfxqf3xg"]
+
+[ext_resource type="Script" uid="uid://cye8rn1ds5uti" path="res://scripts/Queen.gd" id="1_gof1y"]
+[ext_resource type="Texture2D" uid="uid://dm8gavru63fn1" path="res://textures/queen_temp_v01.png" id="2_dpvll"]
+[ext_resource type="Texture2D" uid="uid://dymcv0fdk57m2" path="res://textures/hex_1.png" id="2_uof4u"]
+
+[node name="Queen" type="Node2D"]
+script = ExtResource("1_gof1y")
+
+[node name="Sprite2D2" type="Sprite2D" parent="."]
+position = Vector2(3.8147e-06, -1)
+scale = Vector2(0.0259579, 0.0259579)
+texture = ExtResource("2_uof4u")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(2, -3.8147e-06)
+scale = Vector2(0.152, 0.152)
+texture = ExtResource("2_dpvll")
+
+[node name="HealthBar" type="TextureProgressBar" parent="."]
+offset_left = -12.896
+offset_top = 18.392
+offset_right = 130.104
+offset_bottom = 35.392
+
+
+
+--- FILE: scenes/ShopItem.tscn ---
+----------------------------------
+
+[gd_scene load_steps=3 format=3 uid="uid://6rjpxfmhb0d1"]
+
+[ext_resource type="Script" uid="uid://0lpfd7pr1c3o" path="res://scripts/ui/ShopItem.gd" id="1_x134o"]
+[ext_resource type="Texture2D" uid="uid://dymcv0fdk57m2" path="res://textures/hex_1.png" id="2_c6r3m"]
+
+[node name="ShopItem" type="Node2D"]
+script = ExtResource("1_x134o")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("2_c6r3m")
+
+[node name="Area2D" type="Area2D" parent="Sprite2D"]
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Sprite2D/Area2D"]
+polygon = PackedVector2Array(-676, 1130, 659, 1130, 1310, -2, 659, -1141, -660, -1141, -1311, -2)
+
+
+
+--- FILE: scenes/SniperTurret.tscn ---
+--------------------------------------
+
+[gd_scene load_steps=3 format=3 uid="uid://ncdu2faijkrd"]
+
+[ext_resource type="Script" uid="uid://c0516ionebivq" path="res://scripts/core/Turret.gd" id="1_3fd6t"]
+[ext_resource type="Texture2D" uid="uid://dgllrjajqxa1r" path="res://textures/beegame_previs_sketches_0018_sniper.png" id="2_xs7vd"]
+
+[node name="SniperTurret" type="Node2D"]
+script = ExtResource("1_3fd6t")
+metadata/_custom_type_script = "uid://dxagxtulkyjwf"
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+scale = Vector2(0.205, 0.205)
+texture = ExtResource("2_xs7vd")
+
+
+
+--- FILE: scenes/World.tscn ---
+-------------------------------
+
+[gd_scene load_steps=10 format=3 uid="uid://byycx3eemm1ft"]
+
+[ext_resource type="Script" uid="uid://c1l3ac0xr37aw" path="res://scripts/world/World.gd" id="1_c6gwx"]
+[ext_resource type="Script" uid="uid://m2vlqta6ehny" path="res://scripts/DragLayer.gd" id="2_hlk0d"]
+[ext_resource type="PackedScene" uid="uid://qylv8huf4d2i" path="res://scenes/CommonEnemy.tscn" id="3_0uv0p"]
+[ext_resource type="PackedScene" uid="uid://cfecedf7skswl" path="res://scenes/HexagonTile.tscn" id="4_p1v5b"]
+[ext_resource type="PackedScene" uid="uid://c0li1mfxqf3xg" path="res://scenes/Queen.tscn" id="5_pof0q"]
+[ext_resource type="Script" uid="uid://x3xi8fnbanl4" path="res://scripts/ui/ShopBar.gd" id="7_0uv0p"]
+[ext_resource type="PackedScene" uid="uid://ncdu2faijkrd" path="res://scenes/SniperTurret.tscn" id="8_pdh0q"]
+[ext_resource type="Script" uid="uid://dpvon03y1t6qx" path="res://scripts/WaveManager.gd" id="8_ygioq"]
+[ext_resource type="Script" uid="uid://el2sha2pbr2x" path="res://scripts/GameUI.gd" id="9_pdh0q"]
+
+[node name="World" type="Node2D"]
+script = ExtResource("1_c6gwx")
+queen_scene = ExtResource("5_pof0q")
+hex_tile_scene = ExtResource("4_p1v5b")
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2(576, 324)
+
+[node name="GameLayer" type="Node2D" parent="."]
+
+[node name="WaveManager" type="Node2D" parent="GameLayer"]
+script = ExtResource("8_ygioq")
+enemy_scenes = Array[PackedScene]([ExtResource("3_0uv0p")])
+
+[node name="UI" type="CanvasLayer" parent="GameLayer"]
+
+[node name="DragLayer" type="Control" parent="GameLayer/UI"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = 1.0
+offset_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("2_hlk0d")
+
+[node name="ShopLayer" type="CenterContainer" parent="GameLayer/UI/DragLayer"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ColorRect" type="ColorRect" parent="GameLayer/UI/DragLayer"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.17
+anchor_top = 0.884
+anchor_right = 0.853
+anchor_bottom = 0.969
+offset_left = -20.01
+offset_top = 0.283997
+offset_right = -0.509094
+offset_bottom = 0.118958
+mouse_filter = 2
+color = Color(0.027451, 0.368627, 0.745098, 0.364706)
+
+[node name="ShopBar" type="Node2D" parent="GameLayer/UI"]
+position = Vector2(576, 573)
+script = ExtResource("7_0uv0p")
+item_scenes = Array[PackedScene]([ExtResource("4_p1v5b"), ExtResource("8_pdh0q")])
+bar_width = 601.065
+drop_back_ratio = 0.16
+
+[node name="RerollButton" type="Button" parent="GameLayer/UI/ShopBar"]
+offset_left = -465.0
+offset_top = -16.0
+offset_right = -340.0
+offset_bottom = 21.0
+metadata/_edit_use_anchors_ = true
+
+[node name="FreezeButton" type="Button" parent="GameLayer/UI/ShopBar"]
+offset_left = 396.0
+offset_top = -16.0
+offset_right = 500.0
+offset_bottom = 18.0
+metadata/_edit_use_anchors_ = true
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="TopBar" type="Control" parent="CanvasLayer"]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("9_pdh0q")
+metadata/_edit_use_anchors_ = true
+
+[node name="MoneyLabel" type="Label" parent="CanvasLayer/TopBar"]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 23.0
+metadata/_edit_use_anchors_ = true
+
+[node name="WaveLabel" type="Label" parent="CanvasLayer/TopBar"]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 23.0
+metadata/_edit_use_anchors_ = true
+
+[node name="WaveProgress" type="ProgressBar" parent="CanvasLayer/TopBar"]
+layout_mode = 0
+offset_left = 445.0
+offset_top = 17.0
+offset_right = 652.0
+offset_bottom = 44.0
+metadata/_edit_use_anchors_ = true
+
+[node name="StartWaveButton" type="Button" parent="CanvasLayer/TopBar"]
+layout_mode = 0
+offset_left = 294.0
+offset_top = 14.0
+offset_right = 386.0
+offset_bottom = 45.0
+text = "Start Wave"
+metadata/_edit_use_anchors_ = true
+
+[node name="FastForwardButton" type="Button" parent="CanvasLayer/TopBar"]
+layout_mode = 0
+offset_left = 720.0
+offset_top = 12.0
+offset_right = 760.0
+offset_bottom = 43.0
+text = ">"
+metadata/_edit_use_anchors_ = true
+
+
+
+--- FILE: scripts/DragLayer.gd ---
+----------------------------------
+
+extends Control
+
+var dragging_slot: TextureButton = null
+var origin_shop: ShopManager = null
+var origin_index: int = -1
+
+func start_drag(slot: TextureButton, shop_manager: ShopManager, index: int) -> void:
+	dragging_slot = slot
+	origin_shop   = shop_manager
+	origin_index  = index
+	slot.get_parent().remove_child(slot)
+	add_child(slot)
+	slot.modulate = Color(1, 1, 1, 0.8)
+
+func _unhandled_input(event: InputEvent) -> void:
+	if dragging_slot == null:
+		return
+
+	if event is InputEventMouseMotion:
+		dragging_slot.global_position = event.position
+
+	elif event is InputEventMouseButton \
+			and event.button_index == MOUSE_BUTTON_LEFT \
+			and not event.pressed:
+		var screen_h = get_viewport().get_visible_rect().size.y
+		if event.position.y < screen_h * 0.9:
+			var placed = get_tree().current_scene._spawn_hex(dragging_slot.scene_to_spawn)
+			if placed:
+				origin_shop.on_slot_dragged_off(dragging_slot)
+				dragging_slot.queue_free()
+			else:
+				origin_shop.on_slot_returned_back(dragging_slot, origin_index)
+		else:
+			origin_shop.on_slot_returned_back(dragging_slot, origin_index)
+
+		dragging_slot = null
+		origin_shop   = null
+		origin_index  = -1
+		get_tree().set_input_as_handled()
+
+
+
+--- FILE: scripts/DropZone.gd ---
+---------------------------------
+
+extends Control
+
+func can_drop_data(_pos: Vector2, data) -> bool:
+	if data is PackedScene:
+		print("✅ can_drop_data")
+		return true
+	return false
+
+func drop_data(_pos: Vector2, data) -> void:
+	print("📥 drop_data")
+	get_tree().current_scene.spawn_hex_from_screen(
+		get_viewport().get_mouse_position(), data)
+
+
+
+--- FILE: scripts/Enemy.gd ---
+------------------------------
+
+extends CharacterBody2D
+
+signal died
+signal hit_queen
+
+@export var speed: float = 40.0
+var _world = null
+
+func _ready() -> void:
+	_world = get_tree().current_scene
+	add_to_group("enemies")
+
+func _physics_process(_delta: float) -> void:
+	# 1) Flow‐field primary
+	var my_ax = _world.world_to_axial(global_position)
+	if GridManager.distance_map.has(my_ax):
+		var best_d = INF
+		var best_dir = Vector2.ZERO
+		for dir in GridManager.DIRECTIONS:
+			var nbr = my_ax + dir
+			var d = GridManager.distance_map.get(nbr, INF)
+			if d < best_d:
+				best_d = d
+				best_dir = dir
+		if best_d < INF:
+			var target = _world.axial_to_world(my_ax + best_dir)
+			velocity = (target - global_position).normalized() * speed
+			move_and_slide()
+			return
+
+	# 2) A* fallback
+	var fallback = GridManager.find_path(my_ax, Vector2.ZERO)
+	if fallback.size() > 0:
+		var next_ax = fallback[0]
+		var target = _world.axial_to_world(next_ax)
+		velocity = (target - global_position).normalized() * speed
+		move_and_slide()
+		return
+
+	# 3) No path → hit queen
+	emit_signal("hit_queen")
+	queue_free()
+
+func die() -> void:
+	emit_signal("died")
+	queue_free()
+
+
+
+--- FILE: scripts/GameUI.gd ---
+-------------------------------
+
+# res://scripts/GameUI.gd
+extends Control
+
+# Locate the WaveManager in your scene tree
+@onready var wave_manager      = get_tree().current_scene.get_node("GameLayer/WaveManager")
+# These live under this TopBar Control
+@onready var money_label       = get_node("MoneyLabel")      
+@onready var wave_label        = get_node("WaveLabel")       
+@onready var wave_progress     = get_node("WaveProgress")    
+@onready var start_wave_button = get_node("StartWaveButton") 
+@onready var fast_forward_btn  = get_node("FastForwardButton")
+
+var money : int = 0
+
+func _ready() -> void:
+	# Connect the Start Wave button
+	start_wave_button.connect("pressed", Callable(wave_manager, "start_wave"))
+
+	# Hook up UI to WaveManager signals
+	wave_manager.connect("wave_started",    Callable(self, "_on_wave_started"))
+	wave_manager.connect("enemy_spawned",   Callable(self, "_on_enemy_spawned"))
+	wave_manager.connect("enemy_died",      Callable(self, "_on_enemy_died"))
+	wave_manager.connect("enemy_hit_queen", Callable(self, "_on_enemy_hit_queen"))
+	wave_manager.connect("wave_ended",      Callable(self, "_on_wave_ended"))
+
+func _on_wave_started(wave_number: int, total_enemies: int) -> void:
+	wave_label.text         = "Wave %d" % wave_number
+	wave_progress.min_value = 0
+	wave_progress.max_value = total_enemies
+	wave_progress.value     = 0
+	start_wave_button.disabled = true
+
+func _on_enemy_spawned(_enemy: Node2D) -> void:
+	# no UI change needed here
+	pass
+
+func _on_enemy_died(_enemy: Node2D) -> void:
+	wave_progress.value += 1
+	money += 1
+	money_label.text = "$%d" % money
+
+func _on_enemy_hit_queen(_enemy: Node2D) -> void:
+	wave_progress.value += 1
+	# no gold for queen hits
+
+func _on_wave_ended(_wave_number: int) -> void:
+	start_wave_button.disabled = false
+
+
+
+--- FILE: scripts/Projectile.gd ---
+-----------------------------------
+
+# res://scenes/Projectile.gd
+extends Node2D
+
+signal returned_to_pool
+
+var velocity : Vector2
+var _type    : ProjectileType
+var _time    : float = 0.0
+
+func init(pt: ProjectileType, start_pos: Vector2, dir: Vector2) -> void:
+	_type = pt
+	global_position = start_pos
+	_time = 0.0
+
+	# configure visuals
+	$Sprite.texture = pt.texture
+	$Sprite.modulate = pt.color
+
+	# compute velocity once
+	velocity = dir.normalized() * pt.stats.speed
+
+	show()
+	set_process(true)
+	# behaviors on_spawn
+	for beh in pt.behaviors:
+		beh.on_spawn(self, pt)
+
+func _process(delta: float) -> void:
+	# move
+	global_position += velocity * delta
+
+	# update behaviors
+	for beh in _type.behaviors:
+		beh.on_update(self, _type, delta)
+
+	# lifetime check
+	_time += delta
+	if _time >= _type.stats.lifetime:
+		_expire()
+		return
+
+	# --- Godot 4 style point query ---
+	var params = PhysicsPointQueryParameters2D.new()
+	params.position = global_position
+	params.collide_with_bodies = true
+	params.collide_with_areas = true
+	# max_results = 1 since we only care about the first hit
+	var results = get_world_2d().direct_space_state.intersect_point(params, 1)
+	if results.size() > 0:
+		var hit = results[0].collider
+		if hit.is_in_group("Enemies"):
+			for beh in _type.behaviors:
+				beh.on_hit(self, _type, hit)
+			hit.take_damage(_type.stats.damage)
+			_return_to_pool()
+
+func _expire() -> void:
+	for beh in _type.behaviors:
+		beh.on_expire(self, _type)
+	_return_to_pool()
+
+func _return_to_pool() -> void:
+	set_process(false)
+	hide()
+	emit_signal("returned_to_pool", self)
+
+
+
+--- FILE: scripts/ProjectileManager.gd ---
+------------------------------------------
+
+extends Node2D
+
+@export var pool_size: int = 200
+var _free = []
+var _in_use = []
+
+func _ready() -> void:
+	for i in pool_size:
+		var p = preload("res://scenes/Projectile.tscn").instantiate()
+		add_child(p)
+		p.hide()
+		p.connect("returned_to_pool", Callable(self, "_on_returned"))
+		_free.append(p)
+
+func spawn(pt: ProjectileType, start: Vector2, target: Vector2) -> void:
+	if _free.empty():
+		return
+	var p = _free.pop_back()
+	_in_use.append(p)
+	var dir = target - start
+	p.init(pt, start, dir)
+
+func _on_returned(p: Node) -> void:
+	_in_use.erase(p)
+	_free.append(p)
+
+
+
+--- FILE: scripts/ProjectileType.gd ---
+---------------------------------------
+
+# res://scripts/ProjectileType.gd
+extends Resource
+class_name ProjectileType
+
+@export var stats     : ProjectileStats
+
+# change this line:
+#   @export var behaviors : Array[ProjectileBehavior] = []
+# to:
+@export var behaviors : Array = []
+
+@export var texture   : Texture2D
+@export var color     : Color = Color(1,1,1)
+
+
+
+--- FILE: scripts/Queen.gd ---
+------------------------------
+
+# res://scripts/Queen.gd
+extends Node2D
+
+@export var max_health: int = 10
+var hp: int
+
+func _ready() -> void:
+	hp = max_health
+	# assumes you have a TextureProgress child named "HealthBar"
+	$HealthBar.max_value = max_health
+	$HealthBar.value     = hp
+
+func take_damage(amount: int) -> void:
+	hp -= amount
+	$HealthBar.value = hp
+	if hp <= 0:
+		get_tree().paused = true
+		print("Game Over – Queen has fallen")
+
+
+
+--- FILE: scripts/ShopManager.gd ---
+------------------------------------
+
+# res://ShopManager.gd
+class_name ShopManager
+extends HBoxContainer
+
+@export var pool: Array[PackedScene] = []
+@export var slot_count: int = 5
+@export var slot_spacing: float = 80.0
+
+var slots: Array[TextureButton] = []
+var slot_data: Array[PackedScene] = []
+
+func _ready() -> void:
+	# Gather all TextureButton children
+	for child in get_children():
+		if child is TextureButton:
+			slots.append(child)
+	reroll_shop()
+
+func reroll_shop() -> void:
+	if pool.size() == 0:
+		push_error("ShopManager: pool is empty! Drag some scenes into the pool export.")
+		return
+	slot_data.clear()
+	var choices = pool.duplicate()
+	var count = min(slot_count, choices.size())
+	for i in range(count):
+		var idx = randi() % choices.size()
+		slot_data.append(choices[idx])
+		choices.remove_at(idx)
+	update_slots()
+
+func update_slots() -> void:
+	# Assign each slot its scene and preview texture
+	for i in range(slot_data.size()):
+		var slot = slots[i]
+		var scene = slot_data[i]
+		# Temporarily instantiate to get its Sprite2D texture
+		var inst = scene.instantiate() as Node2D
+		if inst.has_node("Sprite2D"):
+			var sprite = inst.get_node("Sprite2D") as Sprite2D
+			slot.texture_normal = sprite.texture
+		inst.queue_free()
+		slot.scene_to_spawn = scene
+	reposition_slots()
+
+func reposition_slots() -> void:
+	# Center slots with fixed spacing, tweening into place
+	var total_w = (slots.size() - 1) * slot_spacing
+	var start_x = -total_w * 0.5
+	for i in range(slots.size()):
+		var slot = slots[i]
+		var target_pos = Vector2(start_x + i * slot_spacing, slot.position.y)
+		var tw = get_tree().create_tween()
+		var step = tw.tween_property(slot, "position", target_pos, 0.3)
+		step.set_trans(Tween.TRANS_BOUNCE)
+		step.set_ease(Tween.EASE_OUT)
+
+func on_slot_dragged_off(dragged_slot: TextureButton) -> void:
+	var idx = slots.find(dragged_slot)
+	if idx != -1:
+		slots.remove_at(idx)
+		slot_data.remove_at(idx)
+		update_slots()
+
+func on_slot_returned_back(dragged_slot: TextureButton, drop_index: int) -> void:
+	drop_index = clamp(drop_index, 0, slots.size())
+	slots.insert(drop_index, dragged_slot)
+	slot_data.insert(drop_index, dragged_slot.scene_to_spawn)
+	add_child(dragged_slot)
+	update_slots()
+
+
+
+--- FILE: scripts/Slot.gd ---
+-----------------------------
+
+# res://Slot.gd
+extends TextureButton
+
+@export var scene_to_spawn: PackedScene
+
+func _ready():
+	connect("pressed", Callable(self, "_on_pressed"))
+
+func _on_pressed():
+	# ask DragLayer to pull this node out
+	var shop = get_parent() as ShopManager
+	var idx  = shop.slots.find(self)
+	get_node("/root/World/UI/DragLayer").start_drag(self, shop, idx)
+
+
+
+--- FILE: scripts/WaveManager.gd ---
+------------------------------------
+
+# res://scripts/WaveManager.gd
+extends Node
+
+signal wave_started(wave_number: int, total_enemies: int)
+signal enemy_spawned(enemy: Node2D)
+signal enemy_died(enemy: Node2D)
+signal enemy_hit_queen(enemy: Node2D)
+signal wave_ended(wave_number: int)
+
+@export var enemy_scenes       : Array[PackedScene] = []
+@export var base_enemy_count  : int                = 12
+@export var clusters_per_wave : int                = 3
+@export var spawn_interval    : float              = 0.2
+@export var cluster_interval  : float              = 1.5
+@export var cluster_radius    : float              = 400.0
+
+var wave_number     : int  = 0
+var _active         : int  = 0
+var _spawning       : bool = false
+var cluster_origins : Array[Vector2] = []
+
+@onready var _world = get_tree().current_scene
+
+func is_wave_active() -> bool:
+	return _spawning or (_active > 0)
+
+func start_wave() -> void:
+	if _spawning:
+		return
+
+	wave_number += 1
+	var total_enemies = base_enemy_count + (wave_number - 1) * 2
+	_active   = total_enemies
+	_spawning = true
+	emit_signal("wave_started", wave_number, total_enemies)
+
+	# 1) Define cluster origins & compute one path per cluster
+	cluster_origins.clear()
+	var paths = []
+	for i in range(clusters_per_wave):
+		var ang    = randf() * TAU
+		var origin = Vector2(cos(ang), sin(ang)) * cluster_radius
+		cluster_origins.append(origin)
+
+		var start_axial = _world.world_to_axial(origin)
+		var p = GridManager.find_path(start_axial, Vector2.ZERO)
+		if p.is_empty():
+			push_error("Wave blocked from " + str(start_axial))
+			_spawning = false
+			return
+		paths.append(p)
+
+	# 2) Spawn enemies cluster-by-cluster
+	var spawned     = 0
+	var per_cluster = int(ceil(float(total_enemies) / clusters_per_wave))
+	for i in range(clusters_per_wave):
+		for j in range(per_cluster):
+			if spawned >= total_enemies:
+				break
+			_spawn_enemy_at(cluster_origins[i], paths[i])
+			spawned += 1
+			await get_tree().create_timer(spawn_interval).timeout
+		if i < clusters_per_wave - 1:
+			await get_tree().create_timer(cluster_interval).timeout
+
+	_spawning = false
+	_check_wave_end()
+
+func _spawn_enemy_at(origin: Vector2, path: Array) -> void:
+	if enemy_scenes.is_empty():
+		push_error("WaveManager: no enemy_scenes assigned!")
+		return
+	var scene = enemy_scenes[randi() % enemy_scenes.size()]
+	var enemy = scene.instantiate() as CharacterBody2D
+	enemy.position = origin + Vector2(randf_range(-20,20), randf_range(-20,20))
+	add_child(enemy)
+	emit_signal("enemy_spawned", enemy)
+
+	if enemy.has_method("set_path"):
+		enemy.set_path(path)
+
+	if enemy.has_signal("died"):
+		enemy.connect("died", Callable(self, "_on_enemy_died"))
+	if enemy.has_signal("hit_queen"):
+		enemy.connect("hit_queen", Callable(self, "_on_enemy_hit_queen"))
+
+func _on_enemy_died(enemy: Node2D) -> void:
+	_active -= 1
+	emit_signal("enemy_died", enemy)
+	_check_wave_end()
+
+func _on_enemy_hit_queen(enemy: Node2D) -> void:
+	_active -= 1
+	emit_signal("enemy_hit_queen", enemy)
+	_check_wave_end()
+
+func _check_wave_end() -> void:
+	if not _spawning and _active <= 0:
+		emit_signal("wave_ended", wave_number)
+
+
+
+--- FILE: scripts/behaviors/ProjectileBehavior.gd ---
+-----------------------------------------------------
+
+# res://scripts/WobbleBehavior.gd
+extends ProjectileBehavior
+class_name WobbleBehavior
+
+@export var amplitude: float = 5.0
+@export var frequency: float = 10.0
+var _t := 0.0
+
+func on_spawn(_proj: Node2D, _pt: ProjectileType) -> void:
+	pass
+
+func on_update(_proj: Node2D, _pt: ProjectileType, _delta: float) -> void:
+	_t += _delta * frequency
+	var offset = Vector2(sin(_t), cos(_t)) * amplitude * _delta
+	_proj.position += offset
+
+func on_hit(_proj: Node2D, _pt: ProjectileType, _target: Node) -> void:
+	pass
+
+func on_expire(_proj: Node2D, _pt: ProjectileType) -> void:
+	pass
+
+
+
+--- FILE: scripts/behaviors/StraightBehavior.gd ---
+---------------------------------------------------
+
+# res://scripts/StraightBehavior.gd
+extends ProjectileBehavior
+class_name StraightBehavior
+
+# No special behavior: just flies straight by your velocity
+
+
+
+--- FILE: scripts/core/GridManager.gd ---
+-----------------------------------------
+
+# res://scripts/GridManager.gd
+extends Node
+
+signal grid_changed
+
+@export var max_search_radius: int     = 30      # BFS max radius for flow‐field
+@export var max_search_iterations: int = 10000  # A* step limit
+
+var tiles: Dictionary        = {}   # axial_coord → Tile Node
+var distance_map: Dictionary = {}   # axial_coord → steps to Queen
+var _pending_full_rebuild: bool = false
+
+const DIRECTIONS = [
+	Vector2( 1,  0),
+	Vector2( 1, -1),
+	Vector2( 0, -1),
+	Vector2(-1,  0),
+	Vector2(-1,  1),
+	Vector2( 0,  1),
+]
+
+func _ready() -> void:
+	tiles.clear()
+	rebuild_distance_map()
+	emit_signal("grid_changed")
+
+func _deferred_full_rebuild() -> void:
+	_pending_full_rebuild = false
+	rebuild_distance_map()
+	emit_signal("grid_changed")
+
+#— unchanged A* veto
+func can_place_tile(axial: Vector2, world_origins: Array) -> bool:
+	var skip_tiles = [ axial ]
+	for world_o in world_origins:
+		var origin_axial = get_tree().current_scene.world_to_axial(world_o)
+		var path = find_path(origin_axial, Vector2.ZERO, skip_tiles)
+		if path.is_empty():
+			return false
+	return true
+
+#— full rebuild at startup 
+func rebuild_distance_map() -> void:
+	distance_map.clear()
+	distance_map[Vector2.ZERO] = 0
+	var frontier = [ Vector2.ZERO ]
+	var dist     = 0
+	while frontier.size() > 0 and dist < max_search_radius:
+		var next_frontier: Array = []
+		for cell in frontier:
+			for dir in DIRECTIONS:
+				var nbr = cell + dir
+				if tiles.has(nbr) or distance_map.has(nbr):
+					continue
+				distance_map[nbr] = dist + 1
+				next_frontier.append(nbr)
+		frontier = next_frontier
+		dist += 1
+
+#— incremental updates in lieu of full rebuilds 
+func register_tile(tile: Node2D) -> void:
+	tiles[tile.axial_coords] = tile
+	_update_distance_on_block(tile.axial_coords)
+	emit_signal("grid_changed")
+
+func deregister_tile(tile: HexagonTile) -> void:
+	# 1) Clean up neighbor links so no one holds a reference to this freed tile
+	for nb in tile.neighbors:
+		if is_instance_valid(nb):
+			nb.neighbors.erase(tile)
+	tile.neighbors.clear()
+
+	# 2) Remove from grid & update distance‐field
+	tiles.erase(tile.axial_coords)
+	_update_distance_on_unblock(tile.axial_coords)
+	emit_signal("grid_changed")
+
+#— incremental “block” update 
+func _update_distance_on_block(blocked: Vector2) -> void:
+	if blocked == Vector2.ZERO:
+		return
+	distance_map.erase(blocked)
+	var queue: Array = []
+	var in_queue: Dictionary = {}
+	for dir in DIRECTIONS:
+		var nbr = blocked + dir
+		if distance_map.has(nbr):
+			queue.append(nbr); in_queue[nbr] = true
+
+	var processed = 0
+	var max_proc = tiles.size() + distance_map.size() + 50
+	while queue.size() > 0 and processed < max_proc:
+		processed += 1
+		var cell = queue.pop_front()
+		in_queue.erase(cell)
+		if cell == Vector2.ZERO:
+			continue
+		if tiles.has(cell):
+			distance_map.erase(cell)
+			continue
+
+		var best = INF
+		for dir in DIRECTIONS:
+			var adj = cell + dir
+			if distance_map.has(adj):
+				best = min(best, distance_map[adj] + 1)
+
+		var had_old = distance_map.has(cell)
+		var old_val = distance_map[cell] if had_old else INF
+
+		if best == INF:
+			if had_old:
+				distance_map.erase(cell)
+				for dir in DIRECTIONS:
+					var n2 = cell + dir
+					if distance_map.has(n2) and not in_queue.has(n2):
+						queue.append(n2); in_queue[n2] = true
+		else:
+			if not had_old or best != old_val:
+				distance_map[cell] = best
+				for dir in DIRECTIONS:
+					var n2 = cell + dir
+					if not tiles.has(n2) and not in_queue.has(n2):
+						queue.append(n2); in_queue[n2] = true
+
+	if processed >= max_proc and not _pending_full_rebuild:
+		push_warning("Block‐update hit limit; deferring full rebuild.")
+		_pending_full_rebuild = true
+		call_deferred("_deferred_full_rebuild")
+
+#— incremental “unblock” update 
+func _update_distance_on_unblock(freed: Vector2) -> void:
+	if freed == Vector2.ZERO:
+		return
+	var best = INF
+	for dir in DIRECTIONS:
+		var nbr = freed + dir
+		if distance_map.has(nbr):
+			best = min(best, distance_map[nbr] + 1)
+	if best == INF:
+		return
+
+	distance_map[freed] = best
+	var queue: Array = [ freed ]
+	var in_queue: Dictionary = { freed:true }
+	var processed = 0
+	var max_proc = tiles.size() + distance_map.size() + 50
+
+	while queue.size() > 0 and processed < max_proc:
+		processed += 1
+		var cell = queue.pop_front()
+		in_queue.erase(cell)
+		if cell == Vector2.ZERO:
+			continue
+
+		var d = distance_map[cell]
+		for dir in DIRECTIONS:
+			var nbr = cell + dir
+			if tiles.has(nbr):
+				continue
+			var old_dist = distance_map[nbr] if distance_map.has(nbr) else INF
+			if d + 1 < old_dist:
+				distance_map[nbr] = d + 1
+				if not in_queue.has(nbr):
+					queue.append(nbr); in_queue[nbr] = true
+
+	if processed >= max_proc and not _pending_full_rebuild:
+		push_warning("Unblock‐update hit limit; deferring full rebuild.")
+		_pending_full_rebuild = true
+		call_deferred("_deferred_full_rebuild")
+
+#— A* pathfinding (unchanged) 
+func _heuristic(a: Vector2, b: Vector2) -> float:
+	return (abs(a.x - b.x)
+		  + abs(a.x + a.y - b.x - b.y)
+		  + abs(a.y - b.y)) * 0.5
+
+func _reconstruct(came_from: Dictionary, current: Vector2) -> Array:
+	var path = [ current ]
+	while came_from.has(current):
+		current = came_from[current]
+		path.insert(0, current)
+	return path
+
+func find_path(start: Vector2, goal: Vector2, skip_tiles: Array = []) -> Array:
+	var open_set: Array      = [ start ]
+	var came_from: Dictionary = {}
+	var g_score: Dictionary   = { start: 0.0 }
+	var f_score: Dictionary   = { start: _heuristic(start, goal) }
+
+	var iterations = 0
+	while open_set.size() > 0:
+		iterations += 1
+		if iterations > max_search_iterations:
+			push_warning("A* aborted after %d iterations" % max_search_iterations)
+			return []
+
+		var current = open_set[0]
+		for n in open_set:
+			if f_score[n] < f_score[current]:
+				current = n
+		open_set.erase(current)
+
+		if current == goal:
+			return _reconstruct(came_from, current)
+
+		for dir in DIRECTIONS:
+			var neighbor = current + dir
+			if tiles.has(neighbor) or skip_tiles.has(neighbor):
+				continue
+			var tentative = g_score[current] + 1.0
+			if not g_score.has(neighbor) or tentative < g_score[neighbor]:
+				came_from[neighbor] = current
+				g_score[neighbor]    = tentative
+				f_score[neighbor]    = tentative + _heuristic(neighbor, goal)
+				if neighbor not in open_set:
+					open_set.append(neighbor)
+	return []
+
+
+
+--- FILE: scripts/core/HexagonTile.gd ---
+-----------------------------------------
+
+# res://scripts/HexagonTile.gd
+class_name HexagonTile
+extends Node2D
+
+@export var axial_coords: Vector2
+@export var ripple_radius: int = 10
+var neighbors: Array = []
+
+func _ready() -> void:
+	scale = Vector2.ONE
+	rotation_degrees = 0
+
+func play_placement_ripple() -> void:
+	_create_ball_bounce()
+
+	var layers = _bfs_layers(ripple_radius)
+	var max_ring = layers.size() - 1
+	for ring_index in range(1, layers.size()):
+		await get_tree().create_timer(ring_index * 0.05).timeout
+
+		var intensity: float
+		if max_ring > 0:
+			intensity = 1.0 - float(ring_index) / float(max_ring)
+		else:
+			intensity = 1.0
+
+		for tile in layers[ring_index]:
+			tile._create_ripple_tween_with_falloff(intensity)
+
+func _create_ball_bounce() -> void:
+	var peaks = [1.4, 1.12, 1.05]
+	var durations = [0.1, 0.08, 0.06]
+	var tw = create_tween()
+	for i in range(peaks.size()):
+		var target = Vector2.ONE * peaks[i]
+		var d = durations[i]
+		tw.tween_property(self, "scale", target, d) \
+		  .set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+		tw.tween_property(self, "scale", Vector2.ONE, d) \
+		  .set_trans(Tween.TRANS_BOUNCE).set_ease(Tween.EASE_OUT)
+
+func _create_ripple_tween_with_falloff(intensity: float) -> void:
+	var base_trough = 0.85
+	var trough_scale = clamp(1.0 - (1.0 - base_trough) * intensity, base_trough, 1.0)
+	trough_scale *= (0.9 + randf() * 0.1)
+	var dur = lerp(0.1, 0.2, 1.0 - intensity)
+	var max_rot = 15.0
+	var rot = (randf() * 2.0 - 1.0) * max_rot * intensity
+
+	var tw = create_tween()
+	tw.tween_property(self, "scale", Vector2(trough_scale, trough_scale), dur) \
+	  .set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+	tw.tween_property(self, "rotation_degrees", rot, dur) \
+	  .set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+	tw.tween_property(self, "scale", Vector2.ONE, dur) \
+	  .set_trans(Tween.TRANS_BOUNCE).set_ease(Tween.EASE_OUT)
+	tw.tween_property(self, "rotation_degrees", 0, dur) \
+	  .set_trans(Tween.TRANS_BOUNCE).set_ease(Tween.EASE_OUT)
+
+func _bfs_layers(max_radius: int) -> Array:
+	var visited = { self: true }
+	var frontier = [ self ]
+	var layers = []
+	var depth = 0
+	while frontier.size() > 0 and depth <= max_radius:
+		layers.append(frontier.duplicate())
+		var next_frontier = []
+		for t in frontier:
+			for n in t.neighbors:
+				if not visited.has(n):
+					visited[n] = true
+					next_frontier.append(n)
+		frontier = next_frontier
+		depth += 1
+	return layers
+
+
+
+--- FILE: scripts/core/Turret.gd ---
+------------------------------------
+
+# res://scripts/Turret.gd
+extends "res://scripts/core/HexagonTile.gd"
+
+@export_group("Firing")
+@export var base_fire_rate:   float = 1.5    # seconds between shots
+@export var attack_range:     float = 7.0    # in hex units (was `range`)
+@export var magazine_size:    int   = 1
+@export var reload_time:      float = 2.0    # seconds to reload
+
+@export_group("Projectile Defaults")
+@export var default_speed:    float                      = 800.0
+@export var default_damage:     int                      = 25
+@export var default_lifetime:  float                      = 2.0
+@export var default_behaviors: Array[ProjectileBehavior] = [
+	preload("res://scripts/StraightBehavior.gd").new()
+]
+
+# internal state
+var _ammo:     int
+var _cooldown: float
+var _reloading: bool = false
+
+func _ready() -> void:
+	set_process(true)
+	_ammo = magazine_size
+	_cooldown = 0.0
+
+func _process(delta: float) -> void:
+	if _reloading:
+		_cooldown -= delta
+		if _cooldown <= 0.0:
+			_ammo = magazine_size
+			_reloading = false
+			# TODO: reload animation
+	else:
+		_cooldown -= delta
+		if _cooldown <= 0.0:
+			var target = _find_target()
+			if target:
+				_shoot(target)
+				_ammo -= 1
+				if _ammo <= 0:
+					_reloading = true
+					_cooldown = reload_time
+				else:
+					_cooldown = base_fire_rate
+
+func _find_target() -> Node2D:
+	# “first” enemy in range
+	var world_r = attack_range * get_node("/root/World").hex_size
+	for e in get_tree().get_nodes_in_group("Enemies"):
+		if global_position.distance_to(e.global_position) <= world_r:
+			return e
+	return null
+
+func _build_projectile_type() -> ProjectileType:
+	var pt = ProjectileType.new()
+	pt.stats = ProjectileStats.new()
+	pt.stats.speed    = default_speed
+	pt.stats.damage   = default_damage
+	pt.stats.lifetime = default_lifetime
+	pt.behaviors = []
+	for b in default_behaviors:
+		pt.behaviors.append(b.duplicate())
+	if has_node("Sprite2D"):
+		pt.texture = $Sprite2D.texture
+	pt.color = Color(1,1,1)
+	return pt
+
+func _shoot(target: Node2D) -> void:
+	var pt = _build_projectile_type()
+	ProjectileManager.spawn(pt, global_position, target.global_position)
+	# TODO: muzzle‐flash animation
+
+
+
+--- FILE: scripts/stats/ProjectileStats.gd ---
+----------------------------------------------
+
+extends Resource
+class_name ProjectileStats
+
+@export var speed:    float = 400.0
+@export var damage:     int = 10
+@export var lifetime: float = 2.0
+
+
+
+--- FILE: scripts/ui/ShopBar.gd ---
+-----------------------------------
+
+# res://scripts/ShopBar.gd
+extends Node2D
+
+@export var item_scenes: Array[PackedScene] = []
+@export var max_slots: int       = 5
+@export var bar_width: float     = 600.0
+@export var y_offset: float      = 0.0
+@export var drop_back_ratio: float = 0.1  # bottom 10% = cancel area
+
+var items: Array[Node2D] = []
+var base_spacing: float  = 0.0
+var reroll_cost: int     = 2
+
+@onready var reroll_button: Button = $RerollButton
+
+func _ready() -> void:
+	randomize()
+	base_spacing = bar_width / float(max_slots - 1) if max_slots > 1 else 0.0
+	reroll_button.text = "Reroll ($%d)" % reroll_cost
+	reroll_button.connect("pressed", Callable(self, "_on_reroll_pressed"))
+	_spawn_shop_items()
+
+func _spawn_shop_items() -> void:
+	# Clear out any old items
+	for it in items:
+		it.queue_free()
+	items.clear()
+
+	if item_scenes.is_empty():
+		push_error("ShopBar: no scenes assigned to item_scenes")
+		return
+
+	# Spawn exactly max_slots (allow repeats)
+	for i in range(max_slots):
+		var scene = item_scenes[randi() % item_scenes.size()]
+		var inst  = preload("res://scenes/ShopItem.tscn").instantiate() as Node2D
+		# tell the item which scene it will spawn
+		inst.spawn_scene = scene
+		# update its icon immediately
+		if inst.has_method("update_icon"):
+			inst.update_icon()
+		inst.scale    = Vector2.ONE
+		inst.position = _anchor_pos(i, max_slots)
+		add_child(inst)
+		items.append(inst)
+
+	_reflow_items()
+
+func _anchor_pos(index: int, count: int) -> Vector2:
+	if count <= 1:
+		return Vector2(0, y_offset)
+	var offset_x = -base_spacing * float(count - 1) * 0.5 + base_spacing * index
+	return Vector2(offset_x, y_offset)
+
+func _reflow_items() -> void:
+	var count = items.size()
+	for i in range(count):
+		var it = items[i]
+		var tw = create_tween()
+		tw.tween_property(it, "position", _anchor_pos(i, count), 0.3)\
+		  .set_trans(Tween.TRANS_BOUNCE).set_ease(Tween.EASE_OUT)
+
+func _on_item_dropped(item: Node2D, drop_pos: Vector2) -> void:
+	var screen_h = get_viewport().get_visible_rect().size.y
+	if drop_pos.y < screen_h * (1.0 - drop_back_ratio):
+		# PURCHASE: remove and collapse
+		get_tree().current_scene._spawn_hex(item.spawn_scene)
+		items.erase(item)
+		item.queue_free()
+	else:
+		# RETURN: if accidentally removed, re-add
+		if not items.has(item):
+			items.append(item)
+	_reflow_items()
+
+func _on_reroll_pressed() -> void:
+	if item_scenes.is_empty():
+		return
+
+	var new_items: Array[Node2D] = []
+	for i in range(max_slots):
+		var old_item: Node2D = null
+		if i < items.size():
+			old_item = items[i]
+
+		var keep_frozen: bool = old_item != null and old_item.frozen
+		if keep_frozen:
+			new_items.append(old_item)
+		else:
+			if old_item:
+				old_item.queue_free()
+
+			var scene = item_scenes[randi() % item_scenes.size()]
+			var inst  = preload("res://scenes/ShopItem.tscn").instantiate() as Node2D
+			inst.spawn_scene = scene
+			if inst.has_method("update_icon"):
+				inst.update_icon()
+			inst.scale    = Vector2.ZERO
+			inst.position = _anchor_pos(i, max_slots)
+			add_child(inst)
+			new_items.append(inst)
+
+			var tw = create_tween()
+			tw.tween_interval(0.1 * i)
+			tw.tween_property(inst, "scale", Vector2.ONE, 0.25)\
+			  .set_trans(Tween.TRANS_BOUNCE).set_ease(Tween.EASE_OUT)
+
+	items = new_items
+	reroll_cost += 1
+	reroll_button.text = "Reroll ($%d)" % reroll_cost
+	_reflow_items()
+
+
+
+--- FILE: scripts/ui/ShopItem.gd ---
+------------------------------------
+
+# res://scripts/ShopItem.gd
+extends Node2D
+
+@export var spawn_scene: PackedScene
+@export var icon_size: Vector2 = Vector2(64, 64)
+
+var _dragging: bool = false
+var frozen: bool    = false
+
+func _ready() -> void:
+	# scale the placeholder sprite if it already has a texture
+	var sprite = $Sprite2D
+	if sprite.texture:
+		var tex_sz = sprite.texture.get_size()
+		if tex_sz.x > 0:
+			var scale_factor = icon_size.x / tex_sz.x
+			sprite.scale = Vector2(scale_factor, scale_factor)
+
+func update_icon() -> void:
+	# instantiate the scene just long enough to grab its Sprite2D texture
+	if not spawn_scene:
+		return
+	var tmp = spawn_scene.instantiate() as Node2D
+	if tmp.has_node("Sprite2D"):
+		var src = tmp.get_node("Sprite2D") as Sprite2D
+		if src.texture:
+			$Sprite2D.texture = src.texture
+	# clean up
+	tmp.queue_free()
+	# re-scale to fit
+	var tex_sz = $Sprite2D.texture.get_size()
+	if tex_sz.x > 0:
+		var scale_factor = icon_size.x / tex_sz.x
+		$Sprite2D.scale = Vector2(scale_factor, scale_factor)
+
+func _input(event: InputEvent) -> void:
+	if event is InputEventMouseButton:
+		var local = to_local(event.position)
+		var hit_rect = Rect2(-icon_size * 0.5, icon_size)
+
+		# Right‐click: toggle frozen
+		if event.button_index == MOUSE_BUTTON_RIGHT and event.pressed and hit_rect.has_point(local):
+			frozen = not frozen
+			modulate = Color(0.7, 0.7, 1) if frozen else Color(1, 1, 1)
+			return
+
+		# Left‐click: start/stop drag
+		if event.button_index == MOUSE_BUTTON_LEFT:
+			if event.pressed and hit_rect.has_point(local):
+				_dragging = true
+				modulate = Color(1,1,1,0.7)
+			elif not event.pressed and _dragging:
+				_dragging = false
+				modulate = Color(0.7,0.7,1) if frozen else Color(1,1,1)
+				get_parent()._on_item_dropped(self, event.position)
+				return
+
+	elif _dragging and event is InputEventMouseMotion:
+		global_position = event.position
+
+
+
+--- FILE: scripts/world/World.gd ---
+------------------------------------
+
+# res://scripts/World.gd
+extends Node2D
+
+@export var queen_scene            : PackedScene
+@export var hex_tile_scene         : PackedScene
+@export var hex_size               : float = 50.0
+@export var initial_spawn_distance : int   = 8    # axial cells out for placeholder
+
+# Dragging state
+var _dragging_preview : Node2D      = null
+var _dragging_scene   : PackedScene = null
+var _panning          : bool        = false
+
+# Deferred‐placement validation state
+var _last_placed_tile : HexagonTile = null
+var _last_spawn_axial : Vector2     = Vector2.ZERO
+
+# Precomputed world‐pos of initial spawn origin
+var initial_spawn_world: Vector2
+
+@onready var camera       : Camera2D = $Camera2D
+@onready var wave_manager = $GameLayer/WaveManager
+
+func _ready() -> void:
+	# 1) Spawn Queen at (0,0)
+	var q = _spawn_queen()
+	if q:
+		camera.make_current()
+		camera.global_position = q.position
+
+	# 2) Compute hidden initial_spawn_world
+	var init_axial = Vector2(initial_spawn_distance, 0)
+	initial_spawn_world = axial_to_world(init_axial)
+
+func _input(event: InputEvent) -> void:
+	# Zoom & pan
+	if event is InputEventMouseButton and event.pressed:
+		match event.button_index:
+			MOUSE_BUTTON_WHEEL_UP:
+				camera.zoom *= Vector2(1.1,1.1); return
+			MOUSE_BUTTON_WHEEL_DOWN:
+				camera.zoom *= Vector2(0.9,0.9); return
+			MOUSE_BUTTON_MIDDLE:
+				_panning = true; return
+	elif event is InputEventMouseButton \
+			and not event.pressed \
+			and event.button_index == MOUSE_BUTTON_MIDDLE:
+		_panning = false; return
+
+	# Drag‐preview follow + drop
+	if _dragging_preview:
+		if event is InputEventMouseMotion:
+			_dragging_preview.global_position = get_global_mouse_position()
+		elif event is InputEventMouseButton \
+				and event.button_index == MOUSE_BUTTON_LEFT \
+				and not event.pressed:
+			var drop_y   = get_global_mouse_position().y
+			var screen_h = get_viewport().get_visible_rect().size.y
+			if drop_y < screen_h * 0.9:
+				_spawn_hex(_dragging_scene)
+			_end_drag()
+		return
+
+	# Middle‐mouse pan
+	if _panning and event is InputEventMouseMotion:
+		camera.global_position -= event.relative / camera.zoom
+		return
+
+func start_drag(scene_to_spawn: PackedScene) -> void:
+	# Spawn a semi-transparent preview
+	if _dragging_preview:
+		_dragging_preview.queue_free()
+	_dragging_scene   = scene_to_spawn
+	_dragging_preview = scene_to_spawn.instantiate() as Node2D
+	add_child(_dragging_preview)
+	_dragging_preview.modulate = Color(1,1,1,0.6)
+	_dragging_preview.scale    = Vector2(0.8,0.8)
+	_dragging_preview.z_index  = 999
+
+func _end_drag() -> void:
+	if _dragging_preview:
+		_dragging_preview.queue_free()
+	_dragging_preview = null
+	_dragging_scene   = null
+
+func _spawn_queen() -> Node2D:
+	if not queen_scene:
+		push_error("World.gd: queen_scene not assigned!")
+		return null
+	var q = queen_scene.instantiate() as Node2D
+	q.position = axial_to_world(Vector2.ZERO)
+	add_child(q)
+	return q
+
+# — Place hex, play ripple immediately, then defer connectivity check —
+func _spawn_hex(scene: PackedScene) -> bool:
+	var axial = world_to_axial(get_global_mouse_position())
+
+	# 1) Build origin list (real spawns or placeholder)
+	var origins = wave_manager.cluster_origins.duplicate()
+	if origins.is_empty():
+		origins.append(initial_spawn_world)
+
+	# 2) Pick furthest via current flow-field
+	var furthest = origins[0]
+	var best_d   = GridManager.distance_map.get(world_to_axial(furthest), -1)
+	for world_o in origins:
+		var d = GridManager.distance_map.get(world_to_axial(world_o), -1)
+		if d > best_d:
+			best_d   = d
+			furthest = world_o
+	_last_spawn_axial = world_to_axial(furthest)
+
+	# 3) Commit the tile immediately
+	var h = scene.instantiate() as HexagonTile
+	h.axial_coords = axial
+	h.position     = axial_to_world(axial)
+	add_child(h)
+
+	# 4) Register in GridManager (updates distance_map)
+	GridManager.register_tile(h)
+	_last_placed_tile = h
+
+	# 5) Wire up neighbors & ripple animation
+	for dir in GridManager.DIRECTIONS:
+		var nax = axial + dir
+		if GridManager.tiles.has(nax):
+			var neigh = GridManager.tiles[nax]
+			h.neighbors.append(neigh)
+			neigh.neighbors.append(h)
+	if h.has_method("play_placement_ripple"):
+		h.play_placement_ripple()
+
+	# 6) Defer the actual “did we block the Queen?” check
+	call_deferred("_validate_last_placement")
+	return true
+
+func _validate_last_placement() -> void:
+	# If the tile was removed elsewhere, skip
+	if not is_instance_valid(_last_placed_tile):
+		_last_placed_tile = null
+		return
+
+	# If our chosen spawn-origin is now unreachable, undo
+	if not GridManager.distance_map.has(_last_spawn_axial):
+		GridManager.deregister_tile(_last_placed_tile)
+		_last_placed_tile.queue_free()
+
+	_last_placed_tile = null
+
+# — Hex-grid coordinate helpers —
+func axial_to_cube(a: Vector2) -> Vector3:
+	return Vector3(a.x, -a.x - a.y, a.y)
+
+func cube_to_axial(c: Vector3) -> Vector2:
+	return Vector2(c.x, c.z)
+
+func cube_round(c: Vector3) -> Vector3:
+	var rx = round(c.x)
+	var ry = round(c.y)
+	var rz = round(c.z)
+	var dx = abs(rx - c.x)
+	var dy = abs(ry - c.y)
+	var dz = abs(rz - c.z)
+	if dx > dy and dx > dz:
+		rx = -ry - rz
+	elif dy > dz:
+		ry = -rx - rz
+	else:
+		rz = -rx - ry
+	return Vector3(rx, ry, rz)
+
+func world_to_axial(w: Vector2) -> Vector2:
+	var q = (2.0/3.0 * w.x) / hex_size
+	var r = ((-1.0/3.0 * w.x) + (sqrt(3)/3.0 * w.y)) / hex_size
+	return cube_to_axial(cube_round(axial_to_cube(Vector2(q, r))))
+
+func axial_to_world(a: Vector2) -> Vector2:
+	var x = hex_size * 1.5 * a.x
+	var y = hex_size * sqrt(3.0) * (a.y + a.x * 0.5)
+	return Vector2(x, y)
+
+
+

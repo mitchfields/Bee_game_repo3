@@ -1,8 +1,13 @@
-[gd_scene load_steps=2 format=3 uid="uid://btgsg5cffo7bd"]
+[gd_scene load_steps=3 format=3 uid="uid://btgsg5cffo7bd"]
 
 [ext_resource type="Script" uid="uid://b824tmgv6miib" path="res://scripts/Projectile.gd" id="1_dprbf"]
+[ext_resource type="Texture2D" uid="uid://cccfwp2hfyeoe" path="res://textures/regular_triangle_bullet.png" id="2_vihyi"]
 
 [node name="Projectile" type="Node2D"]
 script = ExtResource("1_dprbf")
 
 [node name="Sprite" type="Sprite2D" parent="."]
+position = Vector2(-13, -2.38419e-07)
+rotation = 1.5708
+scale = Vector2(0.0174439, 0.118053)
+texture = ExtResource("2_vihyi")

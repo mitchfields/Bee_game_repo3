@@ -1,12 +1,14 @@
-[gd_scene load_steps=4 format=3 uid="uid://qylv8huf4d2i"]
+[gd_scene load_steps=5 format=3 uid="uid://qylv8huf4d2i"]
 
 [ext_resource type="Script" uid="uid://dtw46kasw5n7w" path="res://scripts/Enemy.gd" id="1_7me0g"]
 [ext_resource type="Texture2D" uid="uid://c5qoctaqmhrbh" path="res://icon.svg" id="2_2q1ts"]
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_ub1ux"]
-size = Vector2(120, 122)
+[sub_resource type="CircleShape2D" id="CircleShape2D_7me0g"]
 
-[node name="CommonEnemy" type="CharacterBody2D"]
+[sub_resource type="CircleShape2D" id="CircleShape2D_2q1ts"]
+radius = 62.7531
+
+[node name="CommonEnemy" type="CharacterBody2D" groups=["Enemies"]]
 scale = Vector2(0.255, 0.255)
 script = ExtResource("1_7me0g")
 
@@ -14,11 +16,18 @@ script = ExtResource("1_7me0g")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
 position = Vector2(0, 2)
-shape = SubResource("RectangleShape2D_ub1ux")
+shape = SubResource("CircleShape2D_7me0g")
+
+[node name="HealthBar" type="ProgressBar" parent="."]
+offset_left = -94.1176
+offset_top = 74.5098
+offset_right = 93.8824
+offset_bottom = 101.51
+max_value = 1.0
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 texture = ExtResource("2_2q1ts")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(0, 1)
-shape = SubResource("RectangleShape2D_ub1ux")
+shape = SubResource("CircleShape2D_2q1ts")

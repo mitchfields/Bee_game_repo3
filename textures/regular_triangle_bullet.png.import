@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dgllrjajqxa1r"
-path="res://.godot/imported/beegame_previs_sketches_0018_sniper.png-0ca0f151af3aed290bd1ad4abd7ac3b0.ctex"
+uid="uid://cccfwp2hfyeoe"
+path="res://.godot/imported/regular_triangle_bullet.png-450e33aadad73b72879f9c63a13ef54d.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://scripts/beegame_previs_sketches_0018_sniper.png"
-dest_files=["res://.godot/imported/beegame_previs_sketches_0018_sniper.png-0ca0f151af3aed290bd1ad4abd7ac3b0.ctex"]
+source_file="res://textures/regular_triangle_bullet.png"
+dest_files=["res://.godot/imported/regular_triangle_bullet.png-450e33aadad73b72879f9c63a13ef54d.ctex"]
 
 [params]
 

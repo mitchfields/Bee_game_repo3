@@ -18,4 +18,4 @@ config/icon="res://icon.svg"
 [autoload]
 
 GridManager="*res://scripts/GridManager.gd"
-ProjectileManager="*res://ProjectileManager.gd"
+ProjectileManager="*res://scripts/ProjectileManager.gd"

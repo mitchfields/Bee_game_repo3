@@ -3,12 +3,11 @@ extends Node
 
 signal grid_changed
 
-@export var max_search_radius: int     = 30      # BFS max radius for flow‐field
-@export var max_search_iterations: int = 10000  # A* step limit
+@export var max_search_radius: int     = 100    # BFS max radius for safety
+@export var max_search_iterations: int = 10000  # not used in simplified version
 
-var tiles: Dictionary        = {}   # axial_coord → Tile Node
-var distance_map: Dictionary = {}   # axial_coord → steps to Queen
-var _pending_full_rebuild: bool = false
+var tiles: Dictionary        = {}  # axial_coord → Tile Node
+var distance_map: Dictionary = {}  # axial_coord → distance to Queen
 
 const DIRECTIONS = [
 	Vector2( 1,  0),
@@ -21,26 +20,22 @@ const DIRECTIONS = [
 
 func _ready() -> void:
 	tiles.clear()
-	rebuild_distance_map()
-	emit_signal("grid_changed")
+	# initial full build
+	_call_rebuild_deferred()
 
-func _deferred_full_rebuild() -> void:
-	_pending_full_rebuild = false
-	rebuild_distance_map()
-	emit_signal("grid_changed")
+# Always rebuild distance_map deferred to avoid frame stalls
+func register_tile(tile: Node2D) -> void:
+	tiles[tile.axial_coords] = tile
+	_call_rebuild_deferred()
 
-#— unchanged A* veto
-func can_place_tile(axial: Vector2, world_origins: Array) -> bool:
-	var skip_tiles = [ axial ]
-	for world_o in world_origins:
-		var origin_axial = get_tree().current_scene.world_to_axial(world_o)
-		var path = find_path(origin_axial, Vector2.ZERO, skip_tiles)
-		if path.is_empty():
-			return false
-	return true
+func deregister_tile(tile: Node2D) -> void:
+	tiles.erase(tile.axial_coords)
+	_call_rebuild_deferred()
 
-#— full rebuild at startup 
-func rebuild_distance_map() -> void:
+func _call_rebuild_deferred() -> void:
+	call_deferred("_rebuild_distance_map")
+
+func _rebuild_distance_map() -> void:
 	distance_map.clear()
 	distance_map[Vector2.ZERO] = 0
 	var frontier = [ Vector2.ZERO ]
@@ -50,126 +45,27 @@ func rebuild_distance_map() -> void:
 		for cell in frontier:
 			for dir in DIRECTIONS:
 				var nbr = cell + dir
+				# skip blocked or already visited
 				if tiles.has(nbr) or distance_map.has(nbr):
 					continue
 				distance_map[nbr] = dist + 1
 				next_frontier.append(nbr)
 		frontier = next_frontier
 		dist += 1
-
-#— incremental updates in lieu of full rebuilds 
-func register_tile(tile: Node2D) -> void:
-	tiles[tile.axial_coords] = tile
-	_update_distance_on_block(tile.axial_coords)
+	# notify any listeners (e.g. your World for flow‐field visuals)
 	emit_signal("grid_changed")
 
-func deregister_tile(tile: HexagonTile) -> void:
-	# 1) Clean up neighbor links so no one holds a reference to this freed tile
-	for nb in tile.neighbors:
-		if is_instance_valid(nb):
-			nb.neighbors.erase(tile)
-	tile.neighbors.clear()
+# can_place_tile stays the same: a simple A* path veto
+func can_place_tile(axial: Vector2, world_origins: Array) -> bool:
+	var skip_tiles = [ axial ]
+	for world_o in world_origins:
+		var origin_axial = get_tree().current_scene.world_to_axial(world_o)
+		var path = find_path(origin_axial, Vector2.ZERO, skip_tiles)
+		if path.is_empty():
+			return false
+	return true
 
-	# 2) Remove from grid & update distance‐field
-	tiles.erase(tile.axial_coords)
-	_update_distance_on_unblock(tile.axial_coords)
-	emit_signal("grid_changed")
-
-#— incremental “block” update 
-func _update_distance_on_block(blocked: Vector2) -> void:
-	if blocked == Vector2.ZERO:
-		return
-	distance_map.erase(blocked)
-	var queue: Array = []
-	var in_queue: Dictionary = {}
-	for dir in DIRECTIONS:
-		var nbr = blocked + dir
-		if distance_map.has(nbr):
-			queue.append(nbr); in_queue[nbr] = true
-
-	var processed = 0
-	var max_proc = tiles.size() + distance_map.size() + 50
-	while queue.size() > 0 and processed < max_proc:
-		processed += 1
-		var cell = queue.pop_front()
-		in_queue.erase(cell)
-		if cell == Vector2.ZERO:
-			continue
-		if tiles.has(cell):
-			distance_map.erase(cell)
-			continue
-
-		var best = INF
-		for dir in DIRECTIONS:
-			var adj = cell + dir
-			if distance_map.has(adj):
-				best = min(best, distance_map[adj] + 1)
-
-		var had_old = distance_map.has(cell)
-		var old_val = distance_map[cell] if had_old else INF
-
-		if best == INF:
-			if had_old:
-				distance_map.erase(cell)
-				for dir in DIRECTIONS:
-					var n2 = cell + dir
-					if distance_map.has(n2) and not in_queue.has(n2):
-						queue.append(n2); in_queue[n2] = true
-		else:
-			if not had_old or best != old_val:
-				distance_map[cell] = best
-				for dir in DIRECTIONS:
-					var n2 = cell + dir
-					if not tiles.has(n2) and not in_queue.has(n2):
-						queue.append(n2); in_queue[n2] = true
-
-	if processed >= max_proc and not _pending_full_rebuild:
-		push_warning("Block‐update hit limit; deferring full rebuild.")
-		_pending_full_rebuild = true
-		call_deferred("_deferred_full_rebuild")
-
-#— incremental “unblock” update 
-func _update_distance_on_unblock(freed: Vector2) -> void:
-	if freed == Vector2.ZERO:
-		return
-	var best = INF
-	for dir in DIRECTIONS:
-		var nbr = freed + dir
-		if distance_map.has(nbr):
-			best = min(best, distance_map[nbr] + 1)
-	if best == INF:
-		return
-
-	distance_map[freed] = best
-	var queue: Array = [ freed ]
-	var in_queue: Dictionary = { freed:true }
-	var processed = 0
-	var max_proc = tiles.size() + distance_map.size() + 50
-
-	while queue.size() > 0 and processed < max_proc:
-		processed += 1
-		var cell = queue.pop_front()
-		in_queue.erase(cell)
-		if cell == Vector2.ZERO:
-			continue
-
-		var d = distance_map[cell]
-		for dir in DIRECTIONS:
-			var nbr = cell + dir
-			if tiles.has(nbr):
-				continue
-			var old_dist = distance_map[nbr] if distance_map.has(nbr) else INF
-			if d + 1 < old_dist:
-				distance_map[nbr] = d + 1
-				if not in_queue.has(nbr):
-					queue.append(nbr); in_queue[nbr] = true
-
-	if processed >= max_proc and not _pending_full_rebuild:
-		push_warning("Unblock‐update hit limit; deferring full rebuild.")
-		_pending_full_rebuild = true
-		call_deferred("_deferred_full_rebuild")
-
-#— A* pathfinding (unchanged) 
+# A* pathfinding unchanged
 func _heuristic(a: Vector2, b: Vector2) -> float:
 	return (abs(a.x - b.x)
 		  + abs(a.x + a.y - b.x - b.y)

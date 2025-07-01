@@ -1,6 +1,6 @@
 # res://scripts/World.gd
 extends Node2D
-class_name World
+#class_name World
 
 @export var queen_scene            : PackedScene
 @export var hex_tile_scene         : PackedScene
@@ -8,17 +8,17 @@ class_name World
 @export var initial_spawn_distance : int      = 8
 @export var player_health          : int      = 20
 
-# Drag‐and‐drop state
+# Drag-and-drop state
 var _dragging_preview : Node2D      = null
 var _dragging_scene   : PackedScene = null
 var _panning          : bool        = false
 
 # Deferred placement validation
-var _last_placed_tile : HexagonTile = null
-var _last_spawn_axial : Vector2     = Vector2.ZERO
+var _last_placed_tile           = null
+var _last_spawn_axial : Vector2 = Vector2.ZERO
 var initial_spawn_world: Vector2
 
-@onready var camera       : Camera2D    = $Camera2D
+@onready var camera       = $Camera2D
 @onready var wave_manager = $GameLayer/WaveManager
 
 func _ready() -> void:
@@ -28,7 +28,7 @@ func _ready() -> void:
 	if q:
 		camera.make_current()
 		camera.global_position = q.position
-	# 2) Compute the “placeholder” spawn‐origin world position
+	# 2) Compute the “placeholder” spawn-origin world position
 	initial_spawn_world = axial_to_world(Vector2(initial_spawn_distance, 0))
 	# 3) Hook into enemy spawn events so we can catch hit_queen
 	wave_manager.connect("enemy_spawned", Callable(self, "_on_enemy_spawned"))
@@ -39,8 +39,7 @@ func _on_enemy_spawned(enemy: Node2D) -> void:
 
 func _on_enemy_hit_queen(_enemy: Node2D) -> void:
 	player_health -= 1
-	print("Player health:", player_health)
-	# When health runs out, switch to your Game Over scene
+	# Removed print() to silence console output
 	if player_health <= 0:
 		get_tree().change_scene_to_file("res://scenes/GameOver.tscn")
 
@@ -55,7 +54,7 @@ func _input(event: InputEvent) -> void:
 			and event.button_index == MOUSE_BUTTON_MIDDLE:
 		_panning = false; return
 
-	# Drag‐preview
+	# Drag-preview
 	if _dragging_preview:
 		if event is InputEventMouseMotion:
 			_dragging_preview.global_position = get_global_mouse_position()
@@ -69,7 +68,7 @@ func _input(event: InputEvent) -> void:
 			_end_drag()
 		return
 
-	# Middle‐mouse panning
+	# Middle-mouse panning
 	if _panning and event is InputEventMouseMotion:
 		camera.global_position -= event.relative / camera.zoom
 		return
@@ -107,7 +106,7 @@ func _spawn_hex(scene: PackedScene) -> bool:
 	if origins.is_empty():
 		origins.append(initial_spawn_world)
 
-	# 2) Pick the furthest origin via current flow‐field
+	# 2) Pick the furthest origin via current flow-field
 	var furthest = origins[0]
 	var best_d   = GridManager.distance_map.get(world_to_axial(furthest), -1)
 	for world_o in origins:
@@ -118,7 +117,7 @@ func _spawn_hex(scene: PackedScene) -> bool:
 	_last_spawn_axial = world_to_axial(furthest)
 
 	# 3) Instantiate & position the new tile
-	var h = scene.instantiate() as HexagonTile
+	var h = scene.instantiate()
 	h.axial_coords = axial
 	h.position     = axial_to_world(axial)
 	add_child(h)
@@ -127,7 +126,7 @@ func _spawn_hex(scene: PackedScene) -> bool:
 	GridManager.register_tile(h)
 	_last_placed_tile = h
 
-	# 5) Wire up neighbors (only valid instances)
+	# 5) Wire up neighbors
 	for dir in GridManager.DIRECTIONS:
 		var nax = axial + dir
 		if GridManager.tiles.has(nax):
@@ -147,7 +146,7 @@ func _validate_last_placement() -> void:
 		_last_placed_tile = null
 		return
 
-	# If our placement cut off all paths, undo it and clean up neighbors
+	# If our placement cut off all paths, undo it
 	if not GridManager.distance_map.has(_last_spawn_axial):
 		for nbr in _last_placed_tile.neighbors.duplicate():
 			if is_instance_valid(nbr) and nbr.neighbors.has(_last_placed_tile):
@@ -158,7 +157,7 @@ func _validate_last_placement() -> void:
 
 	_last_placed_tile = null
 
-# — Hex‐grid coordinate helpers —  
+# — Hex-grid coordinate helpers —
 func axial_to_cube(a: Vector2) -> Vector3:
 	return Vector3(a.x, -a.x - a.y, a.y)
 
@@ -183,7 +182,7 @@ func cube_round(c: Vector3) -> Vector3:
 func world_to_axial(w: Vector2) -> Vector2:
 	var q = (2.0/3.0 * w.x) / hex_size
 	var r = ((-1.0/3.0 * w.x) + (sqrt(3)/3.0 * w.y)) / hex_size
-	return cube_to_axial(cube_round(axial_to_cube(Vector2(q, r))))
+	return cube_to_axial(cube_round(Vector3(q, -q - r, r)))
 
 func axial_to_world(a: Vector2) -> Vector2:
 	var x = hex_size * 1.5 * a.x

@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://byycx3eemm1ft"]
+[gd_scene load_steps=12 format=3 uid="uid://byycx3eemm1ft"]
 
 [ext_resource type="Script" uid="uid://c1l3ac0xr37aw" path="res://scripts/World.gd" id="1_c6gwx"]
 [ext_resource type="Script" uid="uid://m2vlqta6ehny" path="res://scripts/DragLayer.gd" id="2_hlk0d"]
@@ -9,6 +9,7 @@
 [ext_resource type="PackedScene" uid="uid://ncdu2faijkrd" path="res://scenes/SniperTurret.tscn" id="8_pdh0q"]
 [ext_resource type="Script" uid="uid://dpvon03y1t6qx" path="res://scripts/WaveManager.gd" id="8_ygioq"]
 [ext_resource type="Script" uid="uid://el2sha2pbr2x" path="res://scripts/GameUI.gd" id="9_pdh0q"]
+[ext_resource type="Script" uid="uid://dndvi2i051hm2" path="res://scripts/HexGridOverlay.gd" id="10_pdh0q"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_ygioq"]
 font_size = 26
@@ -17,6 +18,8 @@ font_size = 26
 script = ExtResource("1_c6gwx")
 queen_scene = ExtResource("5_pof0q")
 hex_tile_scene = ExtResource("4_p1v5b")
+hex_size = 47.12
+initial_spawn_distance = 0
 
 [node name="Camera2D" type="Camera2D" parent="."]
 position = Vector2(576, 324)
@@ -141,3 +144,14 @@ offset_right = 760.0
 offset_bottom = 43.0
 text = ">"
 metadata/_edit_use_anchors_ = true
+
+[node name="HexGridOverlay" type="Node2D" parent="."]
+show_behind_parent = true
+script = ExtResource("10_pdh0q")
+line_color = Color(0, 0, 0, 1)
+line_width = 2.0
+fill_enabled = true
+fill_color = Color(1, 1, 1, 1)
+anim_enabled = true
+anim_color = Color(0.0115504, 0.0688142, 0.223058, 0.321569)
+use_radius = true

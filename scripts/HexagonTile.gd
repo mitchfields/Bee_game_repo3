@@ -2,7 +2,7 @@
 class_name HexagonTile
 extends Node2D
 
-@export var axial_coords: Vector2
+@export var axial_coords: Vector2 = Vector2.ZERO
 @export var ripple_radius: int = 10
 var neighbors: Array = []
 
@@ -16,8 +16,10 @@ func play_placement_ripple() -> void:
 	var layers = _bfs_layers(ripple_radius)
 	var max_ring = layers.size() - 1
 	for ring_index in range(1, layers.size()):
+		# wait one “ring” per 0.05s
 		await get_tree().create_timer(ring_index * 0.05).timeout
 
+		# compute intensity without using “?”
 		var intensity: float
 		if max_ring > 0:
 			intensity = 1.0 - float(ring_index) / float(max_ring)
@@ -54,7 +56,7 @@ func _create_ripple_tween_with_falloff(intensity: float) -> void:
 	  .set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
 	tw.tween_property(self, "scale", Vector2.ONE, dur) \
 	  .set_trans(Tween.TRANS_BOUNCE).set_ease(Tween.EASE_OUT)
-	tw.tween_property(self, "rotation_degrees", 0, dur) \
+	tw.tween_property(self, "rotation_degrees", 0.0, dur) \
 	  .set_trans(Tween.TRANS_BOUNCE).set_ease(Tween.EASE_OUT)
 
 func _bfs_layers(max_radius: int) -> Array:
@@ -62,6 +64,7 @@ func _bfs_layers(max_radius: int) -> Array:
 	var frontier = [ self ]
 	var layers = []
 	var depth = 0
+
 	while frontier.size() > 0 and depth <= max_radius:
 		layers.append(frontier.duplicate())
 		var next_frontier = []
@@ -72,4 +75,5 @@ func _bfs_layers(max_radius: int) -> Array:
 					next_frontier.append(n)
 		frontier = next_frontier
 		depth += 1
+
 	return layers

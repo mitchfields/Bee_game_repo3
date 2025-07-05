@@ -16,7 +16,6 @@ font_size = 26
 [node name="World" type="Node2D"]
 script = ExtResource("1_c6gwx")
 queen_scene = ExtResource("5_pof0q")
-hex_tile_scene = ExtResource("4_p1v5b")
 
 [node name="Camera2D" type="Camera2D" parent="."]
 position = Vector2(576, 324)

@@ -5,9 +5,9 @@ signal shot_fired
 
 @export_group("Firing")
 @export var base_fire_rate:   float = 2    # seconds between shots
-@export var attack_range:     float = 7.0    # in hex units
+@export var attack_range:     float = 7.0  # in hex units
 @export var magazine_size:    int   = 3
-@export var reload_time:      float = 3.0    # seconds to reload
+@export var reload_time:      float = 3.0  # seconds to reload
 
 @export_group("Projectile Override (optional)")
 @export var override_type: ProjectileType = null
@@ -29,12 +29,12 @@ var _reloading: bool = false
 @onready var _pm = get_node("/root/ProjectileManager")
 
 func _ready() -> void:
-	# When the turret is first spawned/scene-ready, treat it as placed
+	# When the turret is first spawned, initialize
 	on_place()
 
 func on_place() -> void:
-	_ammo = magazine_size
-	_cooldown = 0.0
+	_ammo      = magazine_size
+	_cooldown  = 0.0
 	_reloading = false
 	set_process(true)
 
@@ -42,24 +42,23 @@ func on_remove() -> void:
 	set_process(false)
 
 func _process(delta: float) -> void:
-	# Reload logic
 	if _reloading:
 		_cooldown -= delta
 		if _cooldown <= 0.0:
-			_ammo = magazine_size
+			_ammo      = magazine_size
 			_reloading = false
-			print_debug("Turret reloaded")
+			# debug print removed
 	else:
 		_cooldown -= delta
 		if _cooldown <= 0.0:
 			var target = _find_target()
-			print_debug("Turret: checking for target → ", target)
+			# debug print removed
 			if target:
 				_shoot(target)
 				_ammo -= 1
 				if _ammo <= 0:
 					_reloading = true
-					_cooldown = reload_time
+					_cooldown  = reload_time
 				else:
 					_cooldown = base_fire_rate
 
@@ -91,5 +90,5 @@ func _build_projectile_type() -> ProjectileType:
 func _shoot(target: Node2D) -> void:
 	var pt = _build_projectile_type()
 	_pm.spawn(pt, global_position, target)
-	print_debug("Turret: fired at %s" % target.name)
+	# debug print removed
 	emit_signal("shot_fired", target)

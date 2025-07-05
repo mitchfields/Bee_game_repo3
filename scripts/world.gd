@@ -16,9 +16,12 @@ var _dragging_preview : Node2D      = null
 var _dragging_scene   : PackedScene = null
 var _panning          : bool        = false
 
-# For path‐blocking checks
+# Path‐blocking checks
 var _last_spawn_axial : Vector2     = Vector2.ZERO
 var initial_spawn_world: Vector2
+
+# Track the queen’s hex so we treat it as “occupied”
+var queen_axial_coords : Vector2    = Vector2.ZERO
 
 @onready var camera       : Camera2D      = $Camera2D
 @onready var wave_manager = $GameLayer/WaveManager
@@ -28,16 +31,17 @@ func _ready() -> void:
 	hex_size = max(hex_size, 0.1)
 	randomize()
 
-	# 1) spawn Queen & center camera
+	# 1) spawn Queen, record her axial, and center camera
 	var q = _spawn_queen()
 	if q:
+		queen_axial_coords = world_to_axial(q.position)
 		camera.make_current()
 		camera.global_position = q.position
 
 	# 2) record a world‐space “spawn origin” for path‐checks
 	initial_spawn_world = axial_to_world(Vector2(initial_spawn_distance, 0))
 
-	# 3) hook wave_manager → enemy hit signals
+	# 3) listen for enemies hitting the queen
 	wave_manager.connect("enemy_spawned", Callable(self, "_on_enemy_spawned"))
 
 func _on_enemy_spawned(enemy: Node2D) -> void:
@@ -108,9 +112,14 @@ func _spawn_queen() -> Node2D:
 func _spawn_hex(scene: PackedScene) -> bool:
 	# 1) figure out which hex we clicked
 	var world_pos = get_global_mouse_position()
-	var axial     = world_to_axial(world_pos)
+	var desired   = world_to_axial(world_pos)
+	var axial     = desired
 
-	# 2) pick the furthest spawn‐origin for path check
+	# 2) if that hex is occupied by any tile or the queen, find the closest free hex
+	if GridManager.tiles.has(axial) or axial == queen_axial_coords:
+		axial = _find_nearest_empty(desired)
+
+	# 3) pick the furthest spawn‐origin for our path check
 	var origins = wave_manager.cluster_origins.duplicate()
 	if origins.size() == 0:
 		origins.append(initial_spawn_world)
@@ -123,13 +132,13 @@ func _spawn_hex(scene: PackedScene) -> bool:
 			furthest = world_o
 	_last_spawn_axial = world_to_axial(furthest)
 
-	# 3) instantiate tile at that hex
+	# 4) instantiate the tile at that (possibly adjusted) axial
 	var h = scene.instantiate() as HexagonTile
 	h.axial_coords = axial
 	h.position     = axial_to_world(axial)
 	add_child(h)
 
-	# 4) rebuild path‐map & test
+	# 5) rebuild the path map & test for blocking
 	GridManager.register_tile(h)
 	GridManager._rebuild_distance_map()
 	if not GridManager.distance_map.has(_last_spawn_axial):
@@ -144,7 +153,7 @@ func _spawn_hex(scene: PackedScene) -> bool:
 		h.queue_free()
 		return false
 
-	# 5) wire neighbors + ripple
+	# 6) wire up neighbors + play ripple
 	for dir in GridManager.DIRECTIONS:
 		var nax = axial + dir
 		if GridManager.tiles.has(nax):
@@ -156,6 +165,27 @@ func _spawn_hex(scene: PackedScene) -> bool:
 		h.play_placement_ripple()
 
 	return true
+
+#———————————————————————————————————————————————————————————————
+# Find the nearest axial-hex not occupied by a tile or queen
+func _find_nearest_empty(start: Vector2) -> Vector2:
+	var visited: Array[Vector2] = []
+	var queue:   Array[Vector2] = []
+	visited.append(start)
+	queue.append(start)
+	while queue.size() > 0:
+		var current: Vector2 = queue.pop_front()
+		for dir in GridManager.DIRECTIONS:
+			var neighbor: Vector2 = current + dir
+			if visited.has(neighbor):
+				continue
+			visited.append(neighbor)
+			# skip both placed tiles and the queen
+			if not GridManager.tiles.has(neighbor) and neighbor != queen_axial_coords:
+				return neighbor
+			queue.append(neighbor)
+	# fallback: return original if nowhere else
+	return start
 
 #——— HEX MATH UTILS ——————————————————————————————————————————————
 
